@@ -90,13 +90,13 @@ namespace mldsp
 				setupKeyboard (i);
 			}
 			
-			//pushMatrix ();
-			//translate (400, 0);
+			pushMatrix ();
+			translate (400, 0);
 			setupPlayInfoSection ();
-			//popMatrix ();
+			popMatrix ();
 			
-			//pushMatrix ();
-			//translate (400, 160);
+			pushMatrix ();
+			translate (400, 160);
 			setupSpectrumAnalyzer ();
 		}
 	

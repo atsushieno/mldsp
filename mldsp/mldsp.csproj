@@ -16,6 +16,7 @@
     <CreateTestPage>true</CreateTestPage>
     <SilverlightAppEntry>mldsp.App</SilverlightAppEntry>
     <XapFilename>mldsp.xap</XapFilename>
+    <AssemblyName>mldsp</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,7 +26,6 @@
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AssemblyName>mldsp</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -33,36 +33,26 @@
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AssemblyName>mldsp</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Core, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+    <Reference Include="System.Core">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\moon\class\lib\2.1\System.Core.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Browser, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+    <Reference Include="System.Windows.Browser">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\moon\class\lib\2.1\System.Windows.Browser.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+    <Reference Include="System.Windows">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\moon\class\lib\2.1\System.Windows.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+    <Reference Include="System.Xml">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\moon\class\lib\2.1\System.Xml.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+    <Reference Include="System">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\moon\class\lib\2.1\System.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="System, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\moon\class\lib\2.1\System.dll</HintPath>
     </Reference>
     <Reference Include="Processing.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\tsukimi\Processing.Core.dll</HintPath>
+      <HintPath>libs\Processing.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
