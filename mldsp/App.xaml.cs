@@ -5,8 +5,6 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using ProcessingCli;
 
-using color = System.UInt32;
-
 namespace mldsp
 {
 	public partial class App : ProcessingApplication
@@ -36,27 +34,36 @@ namespace mldsp
 			return value;
 		}
 
-		color color_background = C (0x000008);
-		color color_white_key = C (0xAaAaAa);
-		color color_basic_stroke = C (0x000000);
-		color color_black_key = C (0x000000);
-		color color_black_key_edge = C (0xFfFfFf);
-		color color_bright = C (0xFfFfE0);
-		color color_usual = C (0x3060C0);
-		color color_dark = C (0x1830C0);
-		color color_hidden = C (0x000030);
+		Color color_background;
+		Color color_white_key;
+		Color color_basic_stroke;
+		Color color_black_key;
+		Color color_black_key_edge;
+		Color color_bright;
+		Color color_usual;
+		Color color_dark;
+		Color color_hidden;
 		
-		color color_ch_base;
-		color color_ch_colored;
-		color color_ch_dark;
-		color color_ch_hidden;
-		color color_ch_text_colored;
-		color color_ch_text_base;
-		color color_ch_text_dark;
-		color color_ch_text_hidden;
+		Color color_ch_base;
+		Color color_ch_colored;
+		Color color_ch_dark;
+		Color color_ch_hidden;
+		Color color_ch_text_colored;
+		Color color_ch_text_base;
+		Color color_ch_text_dark;
+		Color color_ch_text_hidden;
 		
 		void SetupColors ()
 		{
+			color_background = color ("#000008");
+			color_white_key = color ("#AaAaAa");
+			color_basic_stroke = color ("#000000");
+			color_black_key = color ("#000000");
+			color_black_key_edge = color ("#FfFfFf");
+			color_bright = color ("#FfFfE0");
+			color_usual = color ("#3060C0");
+			color_dark = color ("#1830C0");
+			color_hidden = color ("#000030");
 			color_ch_base = color_bright;
 			color_ch_colored = color_usual;
 			color_ch_dark = color_dark;
