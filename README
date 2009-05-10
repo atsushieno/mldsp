@@ -1,0 +1,4 @@
+mldsp is some sort of visual music player.
+
+It depends on tsukimi. Tsukimi is broken right now, so I've manually
+added some code that should be generated.
