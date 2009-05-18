@@ -16,6 +16,7 @@
     <CreateTestPage>true</CreateTestPage>
     <SilverlightAppEntry>mldsp.App</SilverlightAppEntry>
     <XapFilename>mldsp.xap</XapFilename>
+    <AssemblyName>mldsp</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,7 +26,6 @@
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AssemblyName>mldsp</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -33,7 +33,6 @@
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AssemblyName>mldsp</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Core, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
@@ -62,7 +61,7 @@
     </Reference>
     <Reference Include="Processing.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\tsukimi\Processing.Core.dll</HintPath>
+      <HintPath>..\..\..\tsukimi\build\Processing.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
