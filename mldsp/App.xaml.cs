@@ -219,7 +219,7 @@ ProcessingApplication.Current.@strokeJoin (ProcessingApplication.BEVEL);
 ProcessingApplication.Current.@strokeWeight (1);
 ProcessingApplication.Current.@stroke (color_basic_stroke);
 ProcessingApplication.Current.@fill (color_black_key);
-double blackKeyStartX = x + k + 0.8 * key_width;
+double blackKeyStartX = x + (k + 0.8) * key_width;
 double blackKeyWidth = key_width * 0.4;
 double blackKeyHeight = key_height / 2;
 ProcessingApplication.Current.@rect (blackKeyStartX, y + 1, blackKeyWidth, blackKeyHeight);
