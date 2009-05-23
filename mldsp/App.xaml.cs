@@ -73,6 +73,7 @@ ProcessingApplication.Current.@popMatrix ();
 ProcessingApplication.Current.@pushMatrix ();
 ProcessingApplication.Current.@translate (400, 160);
 setupSpectrumAnalyzer ();
+ProcessingApplication.Current.@popMatrix ();
 }
 public static void setupSpectrumAnalyzer ()
 {
@@ -257,6 +258,7 @@ color_ch_text_dark = App.color_ch_dark;
 color_ch_text_hidden = App.color_ch_hidden;
 ch_types = new string [] {@"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI", @"MIDI"};
 setup ();
+OnApplicationSetup (ProcessingApplication.Current);
 }
 }
 }
