@@ -14,15 +14,12 @@ using Timer = System.Timers.Timer;
 
 namespace Commons.Music.Midi.Player
 {
+#if !Moonlight
 	public class Driver
 	{
 		public static void Main (string [] args)
 		{
-#if Moonlight
-			var output = IntPtr.Zero;
-#else
 			var output = MidiDeviceManager.OpenOutput (MidiDeviceManager.DefaultOutputDeviceID);
-#endif
 
 			bool syncMode = false;
 
@@ -88,6 +85,7 @@ namespace Commons.Music.Midi.Player
 			}
 		}
 	}
+#endif
 
 	public enum PlayerState
 	{
@@ -159,7 +157,6 @@ namespace Commons.Music.Midi.Player
 					HandleEvent (events [event_idx++]);
 				}
 			} catch (ThreadAbortException ex) {
-				Console.WriteLine ("Aborted player loop");
 				// FIXME: call pause (to shut down all notes)
 				// FIXME: call ResetAbort()
 			}
@@ -284,7 +281,6 @@ namespace Commons.Music.Midi.Player
 		public void PlayAsync ()
 		{
 TextWriter.Null.WriteLine ("STATE: " + State); // FIXME: mono somehow fails to initialize this auto property.
-
 			switch (State) {
 			case PlayerState.Playing:
 				return; // do nothing

@@ -38,7 +38,7 @@ namespace mldsp
 			}
 		}
 
-		MldspPlayer player;
+		PortMidiPlayer player;
 		public SmfMusic Music { get; set; }
 
 		public void Play (FileInfo filename, Stream stream)
@@ -48,15 +48,18 @@ namespace mldsp
 
 			//player.Stop ();
 			Music = reader.Music;
-			player = new MldspPlayer (this);
+			player = new PortMidiPlayer (IntPtr.Zero, Music);
+			player.MessageReceived += delegate(SmfEvent ev) { HandleSmfEvent (ev); };
 
-			TextBlock tb = new TextBlock () { Width = 100, Height = 20 };
-			Canvas.SetLeft (tb, 500);
-			Canvas.SetTop (tb, 400);
+			TextBlock tb = new TextBlock () { Width = 200, Height = 50 };
+			tb.Foreground = new SolidColorBrush (Color.FromArgb (30, 255, 128, 128));
+			Canvas.SetLeft (tb, 200);
+			Canvas.SetTop (tb, 200);
 			tb.Text = "NOTE ON";
 			note_text = tb;
 			Host.Children.Add (tb);
 
+			player.StartLoop ();
 			player.PlayAsync ();
 		}
 
@@ -79,20 +82,6 @@ namespace mldsp
 				//note_text.Text = "(note off)";
 				break;
 			}
-		}
-	}
-
-	public class MldspPlayer : PortMidiPlayer
-	{
-		App owner;
-
-		public MldspPlayer (App owner)
-			: base (IntPtr.Zero, owner.Music)
-		{
-			this.owner = owner;
-			MessageReceived += delegate (SmfEvent e) {
-				owner.HandleSmfEvent (e);
-			}; 
 		}
 	}
 }
