@@ -39,6 +39,7 @@ namespace mldsp
 		}
 
 		PortMidiPlayer player;
+		Dispatcher disp = System.Windows.Browser.HtmlPage.Window.Dispatcher;
 		public SmfMusic Music { get; set; }
 
 		public void Play (FileInfo filename, Stream stream)
@@ -49,12 +50,14 @@ namespace mldsp
 			//player.Stop ();
 			Music = reader.Music;
 			player = new PortMidiPlayer (IntPtr.Zero, Music);
-			player.MessageReceived += delegate(SmfEvent ev) { HandleSmfEvent (ev); };
+			player.MessageReceived += delegate(SmfEvent ev) {
+				disp.BeginInvoke (() => HandleSmfEvent (ev));
+			};
 
 			TextBlock tb = new TextBlock () { Width = 200, Height = 50 };
 			tb.Foreground = new SolidColorBrush (Color.FromArgb (30, 255, 128, 128));
 			Canvas.SetLeft (tb, 200);
-			Canvas.SetTop (tb, 200);
+			Canvas.SetTop (tb, 100);
 			tb.Text = "NOTE ON";
 			note_text = tb;
 			Host.Children.Add (tb);
@@ -70,13 +73,12 @@ namespace mldsp
 			switch (e.Message.MessageType) {
 			case SmfMessage.NoteOn:
 				//note_text.Text = e.ToString ();
-				fill (color (255,255,255));
 				stroke (color (255,255,255));
-				rect (500, 500, 200, 50);
+				rect (500, 260, 200, 50);
 				fill (color (128,128,128));
 				stroke (color (128,128,128));
 				textSize (16);
-				text (e.Message.ToString (), 500, 530);
+				text (e.Message.ToString (), 500, 230);
 				break;
 			case SmfMessage.NoteOff:
 				//note_text.Text = "(note off)";
