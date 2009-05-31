@@ -9,6 +9,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using ProcessingCli;
 using Commons.Music.Midi;
+using Commons.Music.Midi.Player;
 
 namespace mldsp
 {
@@ -56,7 +57,7 @@ namespace mldsp
 			note_text = tb;
 			Host.Children.Add (tb);
 
-			player.PlayerLoop ();
+			player.PlayAsync ();
 		}
 
 		TextBlock note_text;
@@ -81,7 +82,7 @@ namespace mldsp
 		}
 	}
 
-	public class MldspPlayer : PortMidiSyncPlayer
+	public class MldspPlayer : PortMidiPlayer
 	{
 		App owner;
 
@@ -89,12 +90,9 @@ namespace mldsp
 			: base (IntPtr.Zero, owner.Music)
 		{
 			this.owner = owner;
-		}
-
-		public override void HandleEvent (SmfEvent e)
-		{
-			base.HandleEvent (e);
-			owner.HandleSmfEvent (e);
+			MessageReceived += delegate (SmfEvent e) {
+				owner.HandleSmfEvent (e);
+			}; 
 		}
 	}
 }

@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
+using Commons.Music.Midi;
 #if Moonlight
 using MidiOutput = System.IntPtr;
+using System.Windows.Threading;
 #else
 using PortMidiSharp;
+using Timer = System.Timers.Timer;
 #endif
 
-namespace Commons.Music.Midi
+namespace Commons.Music.Midi.Player
 {
 	public class Driver
 	{
@@ -20,10 +23,17 @@ namespace Commons.Music.Midi
 #else
 			var output = MidiDeviceManager.OpenOutput (MidiDeviceManager.DefaultOutputDeviceID);
 #endif
+
+			bool syncMode = false;
+
 			foreach (var arg in args) {
+				if (arg == "--sync") {
+					syncMode = true;
+					continue;
+				}
 				var parser = new SmfReader (File.OpenRead (arg));
 				parser.Parse ();
-#if true
+#if false
 /* // test reader/writer sanity
 				using (var outfile = File.Create ("testtest.mid")) {
 					var data = parser.Music;
@@ -46,16 +56,22 @@ namespace Commons.Music.Midi
 						gen.WriteTrack (tr);
 				}
 */
-
-				var player = new PortMidiSyncPlayer (output, parser.Music);
-				player.PlayerLoop ();
 #else
-				var player = new PortMidiPlayer (output, parser.MusicData);
+
+				// To sync player, just use it.
+				if (syncMode) {
+					var syncPlayer = new PortMidiSyncPlayer (output, parser.Music);
+					syncPlayer.PlayerLoop ();
+					return;
+				}
+
+				var player = new PortMidiPlayer (output, parser.Music);
+				player.StartLoop ();
 				player.PlayAsync ();
-				Console.WriteLine ("empty line to quit, P to pause");
+				Console.WriteLine ("empty line to quit, P to pause and resume");
 				while (true) {
 					string line = Console.ReadLine ();
-					if (line == "p") {
+					if (line == "P") {
 						if (player.State == PlayerState.Playing)
 							player.PauseAsync ();
 						else
@@ -65,6 +81,8 @@ namespace Commons.Music.Midi
 						player.Dispose ();
 						break;
 					}
+					else
+						Console.WriteLine ("what do you mean by '{0}' ?", line);
 				}
 #endif
 			}
@@ -77,6 +95,8 @@ namespace Commons.Music.Midi
 		Playing,
 		Paused
 	}
+
+	public delegate void MidiMessageAction (SmfEvent ev);
 
 	// Player implementation. Plays a MIDI song synchronously.
 	public class PortMidiSyncPlayer : IDisposable
@@ -111,10 +131,8 @@ namespace Commons.Music.Midi
 
 		public void Play ()
 		{
-			if (pause_handle != null) {
+			if (pause_handle != null)
 				pause_handle.Set ();
-				pause_handle = null;
-			}
 		}
 
 		public void Pause ()
@@ -126,18 +144,24 @@ namespace Commons.Music.Midi
 
 		public void PlayerLoop ()
 		{
-			while (true) {
-				pause_handle.WaitOne ();
-				if (stop)
-					break;
-				if (pause) {
-					pause_handle.Reset ();
-					pause = false;
-					continue;
+			try {
+				while (true) {
+					pause_handle.WaitOne ();
+					if (stop)
+						break;
+					if (pause) {
+						pause_handle.Reset ();
+						pause = false;
+						continue;
+					}
+					if (event_idx == events.Count)
+						break;
+					HandleEvent (events [event_idx++]);
 				}
-				if (event_idx == events.Count)
-					break;
-				HandleEvent (events [event_idx++]);
+			} catch (ThreadAbortException ex) {
+				Console.WriteLine ("Aborted player loop");
+				// FIXME: call pause (to shut down all notes)
+				// FIXME: call ResetAbort()
 			}
 		}
 
@@ -163,7 +187,7 @@ namespace Commons.Music.Midi
 		{
 			if (e.DeltaTime != 0) {
 				var ms = GetDeltaTimeInMilliseconds (e.DeltaTime);
-				//Thread.Sleep (ms);
+				Thread.Sleep (ms);
 			}
 			if (e.Message.StatusByte == 0xFF && e.Message.Msb == 0x51)
 				current_tempo = (e.Message.Data [0] << 16) + (e.Message.Data [1] << 8) + e.Message.Data [2];
@@ -172,18 +196,37 @@ namespace Commons.Music.Midi
 			PlayDeltaTime += e.DeltaTime;
 		}
 
+		void WriteSysEx (byte status, byte [] sysex)
+		{
+			var buf = new byte [sysex.Length + 1];
+			buf [0] = status;
+			Array.Copy (sysex, 0, buf, 1, buf.Length - 1);
+#if Moonlight
+#else
+			output.WriteSysEx (0, buf);
+#endif
+		}
+
+		public MidiMessageAction MessageReceived;
+
 		protected virtual void OnMessage (SmfEvent e)
 		{
+			if (MessageReceived != null)
+				MessageReceived (e);
+			SendMidiMessage (e);
+		}
+
+		void SendMidiMessage (SmfEvent e)
+		{
+#if Moonlight
+#else
 			if ((e.Message.Value & 0xFF) == 0xF0)
-				;//output.WriteSysEx (0, e.SysEx);
+				WriteSysEx (0xF0, e.Message.Data);
 			else if ((e.Message.Value & 0xFF) == 0xF7)
-				;//output.WriteSysEx (0, e.SysEx);
+				WriteSysEx (0xF7, e.Message.Data);
 			else if ((e.Message.Value & 0xFF) == 0xFF)
 				return; // meta. Nothing to send.
 			else
-#if Moonlight
-				;
-#else
 				output.Write (0, new MidiMessage (e.Message.StatusByte, e.Message.Msb, e.Message.Lsb));
 #endif
 		}
@@ -204,22 +247,44 @@ namespace Commons.Music.Midi
 
 		public PortMidiPlayer (MidiOutput output, SmfMusic music)
 		{
-			player = new PortMidiSyncPlayer (output, music);
-			sync_player_thread = new Thread (new ThreadStart (delegate { player.Play (); }));
 			State = PlayerState.Stopped;
+			player = new PortMidiSyncPlayer (output, music);
+			ThreadStart ts = delegate {
+				player.Pause ();
+				player.PlayerLoop ();
+				};
+			sync_player_thread = new Thread (ts);
 		}
 
 		public PlayerState State { get; set; }
 
+		public event MidiMessageAction MessageReceived {
+			add { player.MessageReceived += value; }
+			remove { player.MessageReceived -= value; }
+		}
+
 		public void Dispose ()
 		{
-			player.Dispose ();
-			if (sync_player_thread.ThreadState == ThreadState.Running)
+			switch (sync_player_thread.ThreadState) {
+			case ThreadState.Stopped:
+			case ThreadState.AbortRequested:
+			case ThreadState.Aborted:
+				break;
+			default:
 				sync_player_thread.Abort ();
+				break;
+			}
+		}
+
+		public void StartLoop ()
+		{
+			sync_player_thread.Start ();
 		}
 
 		public void PlayAsync ()
 		{
+TextWriter.Null.WriteLine ("STATE: " + State); // FIXME: mono somehow fails to initialize this auto property.
+
 			switch (State) {
 			case PlayerState.Playing:
 				return; // do nothing
@@ -229,6 +294,7 @@ namespace Commons.Music.Midi
 				return;
 			case PlayerState.Stopped:
 				player.Play ();
+				State = PlayerState.Playing;
 				return;
 			}
 		}
@@ -245,4 +311,63 @@ namespace Commons.Music.Midi
 			}
 		}
 	}
+
+	#region Timer wrapper
+	// I'm not sure if I will use this timer mode, but adding it so far.
+	public abstract class TimerWrapper
+	{
+		public abstract void SetNextWait (int milliseconds);
+
+		public event EventHandler Tick;
+
+		protected void OnTick ()
+		{
+			if (Tick != null)
+				Tick (null, null);
+		}
+	}
+
+#if Moonlight
+	public class MoonlightTimerWrapper : TimerWrapper
+	{
+		public MoonlightTimerWrapper ()
+		{
+			timer = new DispatcherTimer ();
+			timer.Tick += delegate {
+				timer.Stop ();
+				OnTick ();
+			};
+		}
+
+		DispatcherTimer timer;
+
+		public override void SetNextWait (int milliseconds)
+		{
+			timer.Interval = TimeSpan.FromMilliseconds (milliseconds);
+			timer.Start ();
+		}
+	}
+#else
+	public class MonoTimerWrapper : TimerWrapper
+	{
+		public MonoTimerWrapper ()
+		{
+			timer = new Timer () { AutoReset = false };
+			timer.Elapsed += delegate {
+				OnTick ();
+			};
+		}
+
+		Timer timer;
+
+		public override void SetNextWait (int milliseconds)
+		{
+			timer.Interval = (double) milliseconds;
+			timer.Start ();
+		}
+	}
+#endif
+
+	#endregion
 }
+
