@@ -21,7 +21,7 @@ namespace mldsp
 		protected override void OnApplicationSetup ()
 		{
 			TextBlock tb = new TextBlock () { Width = 300, Height = 50 };
-			tb.Text = "Click Here and select a MIDI file (likely fails first time)";
+			tb.Text = "Click Here and select a MIDI file (it sometimes fails; retry in such case)";
 			tb.Foreground = new SolidColorBrush (Color.FromArgb (255, 255, 255, 255));
 			Canvas.SetLeft (tb, 400);
 			Canvas.SetTop (tb, 400);
@@ -31,6 +31,7 @@ namespace mldsp
 
 		void SelectFile ()
 		{
+			disp = System.Windows.Browser.HtmlPage.Window.Dispatcher;
 			var dialog = new OpenFileDialog ();
 			dialog.Multiselect = false;
 			if ((bool) dialog.ShowDialog ()) {
@@ -43,7 +44,7 @@ namespace mldsp
 		}
 
 		PortMidiPlayer player;
-		Dispatcher disp = System.Windows.Browser.HtmlPage.Window.Dispatcher;
+		Dispatcher disp;
 		public SmfMusic Music { get; set; }
 
 		public void Play (FileInfo filename, Stream stream)
