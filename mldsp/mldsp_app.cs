@@ -20,12 +20,13 @@ namespace mldsp
 
 		protected override void OnApplicationSetup ()
 		{
-			Rectangle rect = new Rectangle () { Width = 100, Height = 50 };
-			rect.Fill = new SolidColorBrush (Colors.Cyan);
-			Canvas.SetLeft (rect, 600);
-			Canvas.SetTop (rect, 400);
-			rect.MouseLeftButtonUp += delegate { SelectFile (); };
-			Host.Children.Add (rect);
+			TextBlock tb = new TextBlock () { Width = 300, Height = 50 };
+			tb.Text = "Click Here and select a MIDI file (likely fails first time)";
+			tb.Foreground = new SolidColorBrush (Color.FromArgb (255, 255, 255, 255));
+			Canvas.SetLeft (tb, 400);
+			Canvas.SetTop (tb, 400);
+			tb.MouseLeftButtonUp += delegate { SelectFile (); };
+			Host.Children.Add (tb);
 		}
 
 		void SelectFile ()
@@ -49,8 +50,10 @@ namespace mldsp
 		{
 			var reader = new SmfReader (stream);
 			reader.Parse ();
-
-			//player.Stop ();
+			if (player != null) {
+				player.PauseAsync ();
+				// FIXME: it should dispose the player, but it causes crash
+			}
 			Music = reader.Music;
 			player = new PortMidiPlayer (IntPtr.Zero, Music);
 			player.MessageReceived += delegate(SmfEvent ev) {
