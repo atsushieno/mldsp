@@ -15,6 +15,8 @@ namespace mldsp
 {
 	public partial class App : ProcessingApplication
 	{
+		static Panel white_key_panel, black_key_panel;
+
 		protected override void OnApplicationSetup ()
 		{
 			Rectangle rect = new Rectangle () { Width = 100, Height = 50 };
@@ -68,17 +70,44 @@ namespace mldsp
 
 		TextBlock note_text;
 
+		static readonly int [] key_to_keyboard_idx = {0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6};
+		static bool IsWhiteKey (int key)
+		{
+			switch (key) {
+			case 0: case 2: case 4: case 5: case 7: case 9: case 11:
+					return true;
+			default:
+				return false;
+			}
+		}
+		static Rect GetKeyboardRect (int channel, int note)
+		{
+			int octave = note / 12;
+			int key = note % 12;
+			double x = octave * key_width * 7;
+			double y = getChannelYPos (channel) + ch_height - key_height;
+			int k = key_to_keyboard_idx [key];
+			if (IsWhiteKey (key))
+				return new Rect (x + k * key_width, y, key_width, key_height);
+			else {
+				double blackKeyStartX = x + (k + 0.8) * key_width;
+				return new Rect (blackKeyStartX, y + 1, blackKeyWidth, blackKeyHeight);
+			}
+		}
+
 		public void HandleSmfEvent (SmfEvent e)
 		{
 			switch (e.Message.MessageType) {
 			case SmfMessage.NoteOn:
-				//note_text.Text = e.ToString ();
-				stroke (color (255,255,255));
-				rect (500, 260, 200, 50);
-				fill (color (128,128,128));
-				stroke (color (128,128,128));
-				textSize (16);
-				text (e.Message.ToString (), 500, 230);
+				Rect r = GetKeyboardRect (e.Message.Channel, e.Message.Msb);
+				var rect = new Rectangle () { Width = r.Width, Height = r.Height };
+				Canvas.SetLeft (rect, r.X);
+				Canvas.SetTop (rect, r.Y);
+				rect.Fill = new SolidColorBrush (color_keyon);
+				if (IsWhiteKey (e.Message.Msb % 12))
+					white_key_panel.Children.Add (rect);
+				else
+					black_key_panel.Children.Add (rect);
 				break;
 			case SmfMessage.NoteOff:
 				//note_text.Text = "(note off)";

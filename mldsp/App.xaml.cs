@@ -25,6 +25,8 @@ internal static int all_keys;
 internal static int channels;
 internal static int key_width;
 internal static int key_height;
+internal static double blackKeyWidth;
+internal static double blackKeyHeight;
 internal static int ch_height;
 internal static int text_height;
 internal static int play_info_section_width;
@@ -33,6 +35,9 @@ internal static System.Windows.Media.Color color_white_key;
 internal static System.Windows.Media.Color color_basic_stroke;
 internal static System.Windows.Media.Color color_black_key;
 internal static System.Windows.Media.Color color_black_key_edge;
+internal static System.Windows.Media.Color color_keyon;
+internal static System.Windows.Media.Color color_aftertouch;
+internal static System.Windows.Media.Color color_bend;
 internal static System.Windows.Media.Color color_bright;
 internal static System.Windows.Media.Color color_usual;
 internal static System.Windows.Media.Color color_dark;
@@ -173,69 +178,92 @@ ProcessingApplication.Current.@fill (color_ch_text_colored);
 ProcessingApplication.Current.@text (ch_types [channel], 0, yText1);
 ProcessingApplication.Current.@fill (color_ch_text_base);
 ProcessingApplication.Current.@text (@"TRACK.", 0, yText2);
-ProcessingApplication.Current.@fill (color_ch_colored);
-ProcessingApplication.Current.@rect (80, getChannelYPos (channel), 20, text_height);
-ProcessingApplication.Current.@fill (color_ch_colored);
-ProcessingApplication.Current.@rect (100, getChannelYPos (channel), 6 * 16 - channel, text_height);
+//ProcessingApplication.Current.@fill (color_ch_colored);
+//ProcessingApplication.Current.@rect (80, getChannelYPos (channel), 20, text_height);
+//ProcessingApplication.Current.@fill (color_ch_colored);
+//ProcessingApplication.Current.@rect (100, getChannelYPos (channel), 6 * 16 - channel, text_height);
 ProcessingApplication.Current.@stroke (color_ch_colored);
 ProcessingApplication.Current.@line (340, getChannelYPos (channel) + 2, 360, getChannelYPos (channel) + text_height - 2);
 ProcessingApplication.Current.@fill (color_ch_text_colored);
 ProcessingApplication.Current.@text (ProcessingApplication.Current.@nf (1000, 5), 364, getChannelYPos (channel) + text_height);
 ProcessingApplication.Current.@fill (color_ch_text_base);
 ProcessingApplication.Current.@text (@"KN:o" + ProcessingApplication.Current.@nf (5, 1) + @"c", 80, yText2);
-ProcessingApplication.Current.@text (@"TN:" + ProcessingApplication.Current.@nf (1, 3), 130, yText2);
-ProcessingApplication.Current.@text (@"VEL:" + ProcessingApplication.Current.@nf (110, 3), 180, yText2);
-ProcessingApplication.Current.@text (@"GT:" + ProcessingApplication.Current.@nf (8, 3), 230, yText2);
-ProcessingApplication.Current.@text (@"DT:" + ProcessingApplication.Current.@nf (8 * -1, 3), 280, yText2);
+ProcessingApplication.Current.@text (@"TN:" + ProcessingApplication.Current.@nf (1, 3) + "/" + ProcessingApplication.Current.@nf (0, 3), 130, yText2);
+ProcessingApplication.Current.@text ("VEL:\u25B2" + ProcessingApplication.Current.@nf (110, 3), 200, yText2);
+ProcessingApplication.Current.@text ("EXP:\u25BC" + ProcessingApplication.Current.@nf (8, 3), 250, yText2);
+ProcessingApplication.Current.@text (@"DT:" + ProcessingApplication.Current.@nf (8 * -1, 3), 300, yText2);
 ProcessingApplication.Current.@text (@"M:--------", 340, yText2);
 }
 public static void setupKeyboard (int channel)
 {
+			// user_code
+			var h = ProcessingApplication.Current.Host;
+			white_key_panel = new Canvas () { Width = h.Width, Height = h.Height };
+			black_key_panel = new Canvas () { Width = h.Width, Height = h.Height };
 int octaves = all_keys / 12;
 for (int octave = 0; octave < octaves; octave = octave + 1)
 {
 drawOctave (channel, octave);
 }
+			// user code
+			ProcessingApplication.Current.Host.Children.Add (white_key_panel);
+			ProcessingApplication.Current.Host.Children.Add (black_key_panel);
 }
 public static double getChannelYPos (int channel)
 {
 return channel * ch_height;
 }
-public static void drawOctave (int channel, int octave)
-{
-double x = octave * key_width * 7;
-double y = getChannelYPos (channel) + ch_height - key_height;
-for (int k = 0; k < 7; k = k + 1)
-{
-ProcessingApplication.Current.@strokeJoin (ProcessingApplication.ROUND);
-ProcessingApplication.Current.@strokeWeight (1);
-ProcessingApplication.Current.@stroke (color_basic_stroke);
-ProcessingApplication.Current.@fill (color_white_key);
-ProcessingApplication.Current.@rect (x + k * key_width, y, key_width, key_height);
-}
-for (int k = 0; k < 7; k = k + 1)
-{
-if (k != 2 && k != 6){
-ProcessingApplication.Current.@strokeJoin (ProcessingApplication.BEVEL);
-ProcessingApplication.Current.@strokeWeight (1);
-ProcessingApplication.Current.@stroke (color_basic_stroke);
-ProcessingApplication.Current.@fill (color_black_key);
-double blackKeyStartX = x + (k + 0.8) * key_width;
-double blackKeyWidth = key_width * 0.4;
-double blackKeyHeight = key_height / 2;
-ProcessingApplication.Current.@rect (blackKeyStartX, y + 1, blackKeyWidth, blackKeyHeight);
-double bottom = y + blackKeyHeight + 1;
-ProcessingApplication.Current.@stroke (color_black_key_edge);
-ProcessingApplication.Current.@line (blackKeyStartX + 1, bottom, blackKeyStartX + blackKeyWidth - 1, bottom);
-}
-}
-}
+		// modified to provide different layer for black keys
+		public static void drawOctave (int channel, int octave)
+		{
+			double x = octave * key_width * 7;
+			double y = getChannelYPos (channel) + ch_height - key_height;
+			ProcessingApplication.Current.pushMatrix (); // user_code
+			for (int k = 0; k < 7; k = k + 1)
+			{
+				ProcessingApplication.Current.@strokeJoin (ProcessingApplication.ROUND);
+				ProcessingApplication.Current.@strokeWeight (1);
+				ProcessingApplication.Current.@stroke (color_basic_stroke);
+				ProcessingApplication.Current.@fill (color_white_key);
+				ProcessingApplication.Current.@rect (x + k * key_width, y, key_width, key_height);
+			}
+			// <user_code>
+			var wh = ProcessingApplication.Current.Host;
+			ProcessingApplication.Current.popMatrix ();
+			ProcessingApplication.Current.Host.Children.Remove (wh);
+			white_key_panel.Children.Add (wh);
+
+			ProcessingApplication.Current.pushMatrix ();
+			// </custom_code>
+			for (int k = 0; k < 7; k = k + 1)
+			{
+				if (k != 2 && k != 6) {
+					ProcessingApplication.Current.@strokeJoin (ProcessingApplication.BEVEL);
+					ProcessingApplication.Current.@strokeWeight (1);
+					ProcessingApplication.Current.@stroke (color_basic_stroke);
+					ProcessingApplication.Current.@fill (color_black_key);
+					double blackKeyStartX = x + (k + 0.8) * key_width;
+					ProcessingApplication.Current.@rect (blackKeyStartX, y + 1, blackKeyWidth, blackKeyHeight);
+					double bottom = y + blackKeyHeight + 1;
+					ProcessingApplication.Current.@stroke (color_black_key_edge);
+					ProcessingApplication.Current.@line (blackKeyStartX + 1, bottom, blackKeyStartX + blackKeyWidth - 1, bottom);
+				}
+			}
+			// <user_code>
+			var bh = ProcessingApplication.Current.Host;
+			ProcessingApplication.Current.popMatrix ();
+			ProcessingApplication.Current.Host.Children.Remove (bh);
+			black_key_panel.Children.Add (bh);
+			// </user_code>
+		}
 public static void Run ()
 {
 all_keys = 128 - 24;
 channels = 16;
 key_width = 7;
 key_height = 20;
+blackKeyWidth = key_width * 0.4;
+blackKeyHeight = key_height / 2;
 ch_height = 36;
 text_height = 8;
 play_info_section_width = 200;
@@ -244,6 +272,9 @@ color_white_key = ProcessingApplication.Current.color ("#AaAaAa");
 color_basic_stroke = ProcessingApplication.Current.color ("#000000");
 color_black_key = ProcessingApplication.Current.color ("#000000");
 color_black_key_edge = ProcessingApplication.Current.color ("#FfFfFf");
+color_keyon = ProcessingApplication.Current.color ("#FfFf00");
+color_aftertouch = ProcessingApplication.Current.color ("#Ff8000");
+color_bend = ProcessingApplication.Current.color ("#00Ff80");
 color_bright = ProcessingApplication.Current.color ("#FfFfE0");
 color_usual = ProcessingApplication.Current.color ("#3060C0");
 color_dark = ProcessingApplication.Current.color ("#1830C0");

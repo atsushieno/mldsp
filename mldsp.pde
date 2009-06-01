@@ -3,6 +3,8 @@ int all_keys = 128 - 24; // strip octave 0 and octave 10
 int channels = 16;
 int key_width = 7;
 int key_height = 20;
+float blackKeyWidth = key_width * 0.4;
+float blackKeyHeight = key_height / 2;
 int ch_height = 36;
 int text_height = 8;
 int play_info_section_width = 200;
@@ -12,6 +14,9 @@ color color_white_key = #AaAaAa;
 color color_basic_stroke = #000000;
 color color_black_key = #000000;
 color color_black_key_edge = #FfFfFf;
+color color_keyon = #FfFf00;
+color color_aftertouch = #Ff8000;
+color color_bend = #00Ff80;
 color color_bright = #FfFfE0;
 color color_usual = #3060C0;
 color color_dark = #1830C0;
@@ -220,8 +225,6 @@ void drawOctave (int channel, int octave)
       stroke (color_basic_stroke);
       fill (color_black_key);
       float blackKeyStartX = x + (k + 0.8) * key_width;
-      float blackKeyWidth = key_width * 0.4;
-      float blackKeyHeight = key_height / 2.0;
       rect (blackKeyStartX, y + 1, blackKeyWidth, blackKeyHeight);
       float bottom = y + blackKeyHeight + 1;
       stroke (color_black_key_edge);
