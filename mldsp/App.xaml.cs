@@ -11,6 +11,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using ProcessingCli;
 namespace mldsp
 {
@@ -219,13 +220,21 @@ return channel * ch_height;
 			double x = octave * key_width * 7;
 			double y = getChannelYPos (channel) + ch_height - key_height;
 			ProcessingApplication.Current.pushMatrix (); // user_code
-			for (int k = 0; k < 7; k = k + 1)
+			var h = ProcessingApplication.Current.Host; // user_code
+			// <user_code>
+			for (int n = 0; n < 12; n++)
 			{
+				if (!IsWhiteKey (n))
+					continue;
+				int k = key_to_keyboard_idx [n];
+				// </user_code>
 				ProcessingApplication.Current.@strokeJoin (ProcessingApplication.ROUND);
 				ProcessingApplication.Current.@strokeWeight (1);
 				ProcessingApplication.Current.@stroke (color_basic_stroke);
 				ProcessingApplication.Current.@fill (color_white_key);
 				ProcessingApplication.Current.@rect (x + k * key_width, y, key_width, key_height);
+				// user_code
+				key_rectangles [channel, octave * 12 + n] = (Rectangle) h.Children.Last ();
 			}
 			// <user_code>
 			var wh = ProcessingApplication.Current.Host;
@@ -234,9 +243,12 @@ return channel * ch_height;
 			white_key_panel.Children.Add (wh);
 
 			ProcessingApplication.Current.pushMatrix ();
-			// </custom_code>
-			for (int k = 0; k < 7; k = k + 1)
+			for (int n = 0; n < 12; n++)
 			{
+				if (IsWhiteKey (n))
+					continue;
+				int k = key_to_keyboard_idx [n];
+				// </custom_code>
 				if (k != 2 && k != 6) {
 					ProcessingApplication.Current.@strokeJoin (ProcessingApplication.BEVEL);
 					ProcessingApplication.Current.@strokeWeight (1);
@@ -244,6 +256,8 @@ return channel * ch_height;
 					ProcessingApplication.Current.@fill (color_black_key);
 					double blackKeyStartX = x + (k + 0.8) * key_width;
 					ProcessingApplication.Current.@rect (blackKeyStartX, y + 1, blackKeyWidth, blackKeyHeight);
+					// user_code
+					key_rectangles [channel, octave * 12 + n] = (Rectangle) h.Children.Last ();
 					double bottom = y + blackKeyHeight + 1;
 					ProcessingApplication.Current.@stroke (color_black_key_edge);
 					ProcessingApplication.Current.@line (blackKeyStartX + 1, bottom, blackKeyStartX + blackKeyWidth - 1, bottom);

@@ -16,6 +16,7 @@ namespace mldsp
 	public partial class App : ProcessingApplication
 	{
 		static Panel white_key_panel, black_key_panel;
+		static Rectangle [,] key_rectangles = new Rectangle [16,128 - 24];
 
 		protected override void OnApplicationSetup ()
 		{
@@ -80,37 +81,33 @@ namespace mldsp
 				return false;
 			}
 		}
-		static Rect GetKeyboardRect (int channel, int note)
-		{
-			int octave = note / 12;
-			int key = note % 12;
-			double x = octave * key_width * 7;
-			double y = getChannelYPos (channel) + ch_height - key_height;
-			int k = key_to_keyboard_idx [key];
-			if (IsWhiteKey (key))
-				return new Rect (x + k * key_width, y, key_width, key_height);
-			else {
-				double blackKeyStartX = x + (k + 0.8) * key_width;
-				return new Rect (blackKeyStartX, y + 1, blackKeyWidth, blackKeyHeight);
-			}
-		}
 
+		int GetKeyIndexForNote (int value)
+		{
+			int note = value - 24;
+			if (note < 0 || 128 - 24 < note)
+				return -1;
+			return note;
+		}
 		public void HandleSmfEvent (SmfEvent e)
 		{
 			switch (e.Message.MessageType) {
 			case SmfMessage.NoteOn:
-				Rect r = GetKeyboardRect (e.Message.Channel, e.Message.Msb);
-				var rect = new Rectangle () { Width = r.Width, Height = r.Height };
-				Canvas.SetLeft (rect, r.X);
-				Canvas.SetTop (rect, r.Y);
-				rect.Fill = new SolidColorBrush (color_keyon);
-				if (IsWhiteKey (e.Message.Msb % 12))
-					white_key_panel.Children.Add (rect);
-				else
-					black_key_panel.Children.Add (rect);
+				if (e.Message.Lsb == 0)
+					goto case SmfMessage.NoteOff; // It is equivalent to note off
+				int note = GetKeyIndexForNote (e.Message.Msb);
+				if (note < 0)
+					break; // out of range
+				key_rectangles [e.Message.Channel, note].Fill = new SolidColorBrush (color_keyon);
 				break;
 			case SmfMessage.NoteOff:
-				//note_text.Text = "(note off)";
+				note = GetKeyIndexForNote (e.Message.Msb);
+				if (note < 0)
+					break; // out of range
+				if (IsWhiteKey (note % 12))
+					key_rectangles [e.Message.Channel, note].Fill = new SolidColorBrush (color_white_key);
+				else
+					key_rectangles [e.Message.Channel, note].Fill = new SolidColorBrush (color_black_key);
 				break;
 			}
 		}
