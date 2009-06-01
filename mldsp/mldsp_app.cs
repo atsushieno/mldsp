@@ -57,26 +57,16 @@ namespace mldsp
 				disp.BeginInvoke (() => HandleSmfEvent (ev));
 			};
 
-			TextBlock tb = new TextBlock () { Width = 200, Height = 50 };
-			tb.Foreground = new SolidColorBrush (Color.FromArgb (30, 255, 128, 128));
-			Canvas.SetLeft (tb, 200);
-			Canvas.SetTop (tb, 100);
-			tb.Text = "NOTE ON";
-			note_text = tb;
-			Host.Children.Add (tb);
-
 			player.StartLoop ();
 			player.PlayAsync ();
 		}
 
-		TextBlock note_text;
-
 		static readonly int [] key_to_keyboard_idx = {0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6};
-		static bool IsWhiteKey (int key)
+		static bool IsWhiteKey (int note)
 		{
-			switch (key) {
+			switch (note % 12) {
 			case 0: case 2: case 4: case 5: case 7: case 9: case 11:
-					return true;
+				return true;
 			default:
 				return false;
 			}
@@ -104,7 +94,7 @@ namespace mldsp
 				note = GetKeyIndexForNote (e.Message.Msb);
 				if (note < 0)
 					break; // out of range
-				if (IsWhiteKey (note % 12))
+				if (IsWhiteKey (note))
 					key_rectangles [e.Message.Channel, note].Fill = new SolidColorBrush (color_white_key);
 				else
 					key_rectangles [e.Message.Channel, note].Fill = new SolidColorBrush (color_black_key);

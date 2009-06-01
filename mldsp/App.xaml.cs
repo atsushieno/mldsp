@@ -243,6 +243,7 @@ return channel * ch_height;
 			white_key_panel.Children.Add (wh);
 
 			ProcessingApplication.Current.pushMatrix ();
+			h = ProcessingApplication.Current.Host; // user_code
 			for (int n = 0; n < 12; n++)
 			{
 				if (IsWhiteKey (n))
