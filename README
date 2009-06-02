@@ -1,4 +1,6 @@
-mldsp is some sort of visual music player.
+MLDSP aims to become a visual music player. So far, it only visualizes SMF.
 
-It depends on tsukimi. Tsukimi is broken right now, so I've manually
-added some code that should be generated.
+It depends on tsukimi. The primary UI was initially created using tsukimi,
+but it's not automatically generated anymore (I've added changes manually).
+
+It's not working beautifully yet.
