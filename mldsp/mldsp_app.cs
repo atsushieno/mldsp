@@ -10,6 +10,12 @@ using System.Windows.Threading;
 using ProcessingCli;
 using Commons.Music.Midi;
 using Commons.Music.Midi.Player;
+#if Moonlight
+using System.Windows.Browser;
+using MidiOutput = System.IntPtr;
+#else
+using PortMidiSharp;
+#endif
 
 namespace mldsp
 {
@@ -29,26 +35,40 @@ namespace mldsp
 			Host.Children.Add (tb);
 		}
 
+#if Moonlight
+		Dispatcher disp;
+#endif
+		MidiOutput output;
+		PortMidiPlayer player;
+
 		void SelectFile ()
 		{
-			disp = System.Windows.Browser.HtmlPage.Window.Dispatcher;
+#if Moonlight
+			disp = HtmlPage.Window.Dispatcher;
+#endif
 			var dialog = new OpenFileDialog ();
 			dialog.Multiselect = false;
 			if ((bool) dialog.ShowDialog ()) {
 				try {
 					Play (dialog.File, dialog.File.OpenRead ());
 				} catch (Exception ex) {
+#if Moonlight
 					System.Windows.Browser.HtmlPage.Window.Alert (ex.ToString ());
+#else
+					Console.WriteLine (ex);
+#endif
 				}
 			}
 		}
 
-		PortMidiPlayer player;
-		Dispatcher disp;
 		public SmfMusic Music { get; set; }
 
 		public void Play (FileInfo filename, Stream stream)
 		{
+#if !Moonlight
+			if (output == null)
+				output = MidiDeviceManager.OpenOutput (MidiDeviceManager.DefaultOutputDeviceID);
+#endif
 			var reader = new SmfReader (stream);
 			reader.Parse ();
 			if (player != null) {
@@ -56,9 +76,13 @@ namespace mldsp
 				// FIXME: it should dispose the player, but it causes crash
 			}
 			Music = reader.Music;
-			player = new PortMidiPlayer (IntPtr.Zero, Music);
+			player = new PortMidiPlayer (output, Music);
 			player.MessageReceived += delegate(SmfEvent ev) {
+#if Moonlight
 				disp.BeginInvoke (() => HandleSmfEvent (ev));
+#else
+				HandleSmfEvent (ev);
+#endif
 			};
 
 			player.StartLoop ();
