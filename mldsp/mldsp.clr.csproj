@@ -38,7 +38,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.xaml" />
+    <None Include="App.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PortMidiPlayer.cs" />
