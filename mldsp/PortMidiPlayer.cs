@@ -8,7 +8,6 @@ using Commons.Music.Midi;
 using MidiOutput = System.IntPtr;
 using System.Windows.Threading;
 #else
-using PortMidiSharp;
 using Timer = System.Timers.Timer;
 #endif
 
@@ -57,12 +56,12 @@ namespace Commons.Music.Midi.Player
 
 				// To sync player, just use it.
 				if (syncMode) {
-					var syncPlayer = new PortMidiSyncPlayer (output, parser.Music);
+					var syncPlayer = new MidiSyncPlayer (output, parser.Music);
 					syncPlayer.PlayerLoop ();
 					return;
 				}
 
-				var player = new PortMidiPlayer (output, parser.Music);
+				var player = new MidiPlayer (output, parser.Music);
 				player.StartLoop ();
 				player.PlayAsync ();
 				Console.WriteLine ("empty line to quit, P to pause and resume");
@@ -97,21 +96,17 @@ namespace Commons.Music.Midi.Player
 	public delegate void MidiMessageAction (SmfEvent ev);
 
 	// Player implementation. Plays a MIDI song synchronously.
-	public class PortMidiSyncPlayer : IDisposable
+	public class MidiSyncPlayer : IDisposable
 	{
-		public PortMidiSyncPlayer (MidiOutput output, SmfMusic music)
+		public MidiSyncPlayer (SmfMusic music)
 		{
-			if (output == null)
-				throw new ArgumentNullException ("output");
 			if (music == null)
 				throw new ArgumentNullException ("music");
 
-			this.output = output;
 			this.music = music;
 			events = SmfTrackMerger.Merge (music).Tracks [0].Events;
 		}
 
-		MidiOutput output;
 		SmfMusic music;
 		IList<SmfEvent> events;
 		ManualResetEvent pause_handle = new ManualResetEvent (true);
@@ -237,15 +232,15 @@ namespace Commons.Music.Midi.Player
 	}
 
 	// Provides asynchronous player control.
-	public class PortMidiPlayer : IDisposable
+	public class MidiPlayer : IDisposable
 	{
-		PortMidiSyncPlayer player;
+		MidiSyncPlayer player;
 		Thread sync_player_thread;
 
-		public PortMidiPlayer (MidiOutput output, SmfMusic music)
+		public MidiPlayer (SmfMusic music)
 		{
 			State = PlayerState.Stopped;
-			player = new PortMidiSyncPlayer (output, music);
+			player = new MidiSyncPlayer (music);
 			ThreadStart ts = delegate {
 				player.Pause ();
 				player.PlayerLoop ();

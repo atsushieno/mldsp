@@ -37,7 +37,7 @@ namespace mldsp
 
 		Dispatcher disp;
 		MidiOutput output;
-		PortMidiPlayer player;
+		MidiPlayer player;
 
 		void SelectFile ()
 		{
@@ -79,7 +79,7 @@ namespace mldsp
 				// FIXME: it should dispose the player, but it causes crash
 			}
 			Music = reader.Music;
-			player = new PortMidiPlayer (output, Music);
+			player = new MidiPlayer (Music);
 			player.MessageReceived += delegate(SmfEvent ev) {
 				disp.BeginInvoke (() => HandleSmfEvent (ev));
 			};
