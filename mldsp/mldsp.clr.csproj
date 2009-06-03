@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MidiPlayer.cs" />
+    <Compile Include="PortMidiPlayer.cs" />
     <Compile Include="SMF.cs" />
     <Compile Include="mldsp_app.cs" />
     <Compile Include="App.xaml.cs" />

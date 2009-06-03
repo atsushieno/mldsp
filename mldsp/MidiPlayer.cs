@@ -13,79 +13,6 @@ using Timer = System.Timers.Timer;
 
 namespace Commons.Music.Midi.Player
 {
-#if !Moonlight
-	public class Driver
-	{
-		public static void Main (string [] args)
-		{
-			var output = MidiDeviceManager.OpenOutput (MidiDeviceManager.DefaultOutputDeviceID);
-
-			bool syncMode = false;
-
-			foreach (var arg in args) {
-				if (arg == "--sync") {
-					syncMode = true;
-					continue;
-				}
-				var parser = new SmfReader (File.OpenRead (arg));
-				parser.Parse ();
-#if false
-/* // test reader/writer sanity
-				using (var outfile = File.Create ("testtest.mid")) {
-					var data = parser.Music;
-					var gen = new SmfWriter (outfile);
-					gen.WriteHeader (data.Format, (short)data.Tracks.Count, data.DeltaTimeSpec);
-					foreach (var tr in data.Tracks)
-						gen.WriteTrack (tr);
-				}
-*/
-// test merger/splitter
-/*
-				var merged = SmfTrackMerger.Merge (parser.Music);
-//				var result = merged;
-				var result = SmfTrackSplitter.Split (merged.Tracks [0].Events, parser.Music.DeltaTimeSpec);
-				using (var outfile = File.Create ("testtest.mid")) {
-					var gen = new SmfWriter (outfile);
-					gen.DisableRunningStatus = true;
-					gen.WriteHeader (result.Format, (short)result.Tracks.Count, result.DeltaTimeSpec);
-					foreach (var tr in result.Tracks)
-						gen.WriteTrack (tr);
-				}
-*/
-#else
-
-				// To sync player, just use it.
-				if (syncMode) {
-					var syncPlayer = new MidiSyncPlayer (output, parser.Music);
-					syncPlayer.PlayerLoop ();
-					return;
-				}
-
-				var player = new MidiPlayer (output, parser.Music);
-				player.StartLoop ();
-				player.PlayAsync ();
-				Console.WriteLine ("empty line to quit, P to pause and resume");
-				while (true) {
-					string line = Console.ReadLine ();
-					if (line == "P") {
-						if (player.State == PlayerState.Playing)
-							player.PauseAsync ();
-						else
-							player.PlayAsync ();
-					}
-					else if (line == "") {
-						player.Dispose ();
-						break;
-					}
-					else
-						Console.WriteLine ("what do you mean by '{0}' ?", line);
-				}
-#endif
-			}
-		}
-	}
-#endif
-
 	public enum PlayerState
 	{
 		Stopped,
@@ -114,12 +41,8 @@ namespace Commons.Music.Midi.Player
 
 		public int PlayDeltaTime { get; set; }
 
-		public void Dispose ()
+		public virtual void Dispose ()
 		{
-#if Moonlight
-#else
-			output.Close ();
-#endif
 		}
 
 		public void Play ()
@@ -188,39 +111,12 @@ namespace Commons.Music.Midi.Player
 			PlayDeltaTime += e.DeltaTime;
 		}
 
-		void WriteSysEx (byte status, byte [] sysex)
-		{
-			var buf = new byte [sysex.Length + 1];
-			buf [0] = status;
-			Array.Copy (sysex, 0, buf, 1, buf.Length - 1);
-#if Moonlight
-#else
-			output.WriteSysEx (0, buf);
-#endif
-		}
-
 		public MidiMessageAction MessageReceived;
 
 		protected virtual void OnMessage (SmfEvent e)
 		{
 			if (MessageReceived != null)
 				MessageReceived (e);
-			SendMidiMessage (e);
-		}
-
-		void SendMidiMessage (SmfEvent e)
-		{
-#if Moonlight
-#else
-			if ((e.Message.Value & 0xFF) == 0xF0)
-				WriteSysEx (0xF0, e.Message.Data);
-			else if ((e.Message.Value & 0xFF) == 0xF7)
-				WriteSysEx (0xF7, e.Message.Data);
-			else if ((e.Message.Value & 0xFF) == 0xFF)
-				return; // meta. Nothing to send.
-			else
-				output.Write (0, new MidiMessage (e.Message.StatusByte, e.Message.Msb, e.Message.Lsb));
-#endif
 		}
 
 		public void Stop ()
@@ -255,7 +151,7 @@ namespace Commons.Music.Midi.Player
 			remove { player.MessageReceived -= value; }
 		}
 
-		public void Dispose ()
+		public virtual void Dispose ()
 		{
 			switch (sync_player_thread.ThreadState) {
 			case ThreadState.Stopped:
