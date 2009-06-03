@@ -20,7 +20,7 @@ namespace mldspgtk
 			w.DefaultWidth = 800;
 			w.DeleteEvent += delegate { Application.Quit (); };
 			var moon = new MoonlightHost ();
-			moon.LoadXap ("mldsp-clr.xap");
+			moon.LoadXap ("mldsp.clr.xap");
 			w.Add (moon);
 			w.ShowAll ();
 

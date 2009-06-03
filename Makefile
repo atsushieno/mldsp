@@ -6,8 +6,9 @@ all:
 	cp mldsp/bin/Debug/App.xaml build
 	cp mldsp/bin/Debug/Processing.Core.CLR.dll* build
 	cp mldsp/bin/Debug/mldsp.clr.dll* build
-	mxap --application-name=mldsp-clr build
-	cp build/mldsp-clr.xap mldsp-gtk/bin/Debug
+	#mxap --application-name=mldsp.clr build
+	cd build; rm -f mldsp.clr.xap; zip mldsp.clr.xap AppManifest.xaml *.dll; cd ..
+	cp build/mldsp.clr.xap mldsp-gtk/bin/Debug
 
 run:
-	mono --debug mldsp-gtk/bin/Debug/mldsp-gtk.exe
+	cd mldsp-gtk/bin/Debug; mono --debug mldsp-gtk.exe; cd ../../..
