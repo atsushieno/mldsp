@@ -14,6 +14,7 @@ namespace Commons.Music.Midi.Player
 		public PortMidiPlayer (MidiOutput output, SmfMusic music)
 			: base (music)
 		{
+			this.output = output;
 			MessageReceived += delegate (SmfEvent ev) { SendMidiMessage (ev); };
 		}
 
