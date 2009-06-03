@@ -4,12 +4,6 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using Commons.Music.Midi;
-#if Moonlight
-using MidiOutput = System.IntPtr;
-using System.Windows.Threading;
-#else
-using Timer = System.Timers.Timer;
-#endif
 
 namespace Commons.Music.Midi.Player
 {
@@ -198,63 +192,5 @@ TextWriter.Null.WriteLine ("STATE: " + State); // FIXME: mono somehow fails to i
 			}
 		}
 	}
-
-	#region Timer wrapper
-	// I'm not sure if I will use this timer mode, but adding it so far.
-	public abstract class TimerWrapper
-	{
-		public abstract void SetNextWait (int milliseconds);
-
-		public event EventHandler Tick;
-
-		protected void OnTick ()
-		{
-			if (Tick != null)
-				Tick (null, null);
-		}
-	}
-
-#if Moonlight
-	public class MoonlightTimerWrapper : TimerWrapper
-	{
-		public MoonlightTimerWrapper ()
-		{
-			timer = new DispatcherTimer ();
-			timer.Tick += delegate {
-				timer.Stop ();
-				OnTick ();
-			};
-		}
-
-		DispatcherTimer timer;
-
-		public override void SetNextWait (int milliseconds)
-		{
-			timer.Interval = TimeSpan.FromMilliseconds (milliseconds);
-			timer.Start ();
-		}
-	}
-#else
-	public class MonoTimerWrapper : TimerWrapper
-	{
-		public MonoTimerWrapper ()
-		{
-			timer = new Timer () { AutoReset = false };
-			timer.Elapsed += delegate {
-				OnTick ();
-			};
-		}
-
-		Timer timer;
-
-		public override void SetNextWait (int milliseconds)
-		{
-			timer.Interval = (double) milliseconds;
-			timer.Start ();
-		}
-	}
-#endif
-
-	#endregion
 }
 
