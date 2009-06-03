@@ -11,4 +11,4 @@ all:
 	cp build/mldsp.clr.xap mldsp-gtk/bin/Debug
 
 run:
-	cd mldsp-gtk/bin/Debug; mono --debug mldsp-gtk.exe; cd ../../..
+	cd mldsp-gtk/bin/Debug; mono --debug mldsp-gtk.exe $(DEVICE); cd ../../..

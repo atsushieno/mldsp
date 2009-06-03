@@ -35,9 +35,7 @@ namespace mldsp
 			Host.Children.Add (tb);
 		}
 
-#if Moonlight
 		Dispatcher disp;
-#endif
 		MidiOutput output;
 		PortMidiPlayer player;
 
@@ -45,6 +43,8 @@ namespace mldsp
 		{
 #if Moonlight
 			disp = HtmlPage.Window.Dispatcher;
+#else
+			disp = Deployment.Current.Dispatcher;
 #endif
 			var dialog = new OpenFileDialog ();
 			dialog.Multiselect = false;
@@ -63,11 +63,14 @@ namespace mldsp
 
 		public SmfMusic Music { get; set; }
 
+		public int? OutputDeviceID { get; set; }
+
 		public void Play (FileInfo filename, Stream stream)
 		{
 #if !Moonlight
 			if (output == null)
-				output = MidiDeviceManager.OpenOutput (MidiDeviceManager.DefaultOutputDeviceID);
+				output = MidiDeviceManager.OpenOutput (OutputDeviceID ?? MidiDeviceManager.DefaultOutputDeviceID);
+			Console.WriteLine ("Opened Device " + OutputDeviceID);
 #endif
 			var reader = new SmfReader (stream);
 			reader.Parse ();
@@ -78,11 +81,7 @@ namespace mldsp
 			Music = reader.Music;
 			player = new PortMidiPlayer (output, Music);
 			player.MessageReceived += delegate(SmfEvent ev) {
-#if Moonlight
 				disp.BeginInvoke (() => HandleSmfEvent (ev));
-#else
-				HandleSmfEvent (ev);
-#endif
 			};
 
 			player.StartLoop ();
