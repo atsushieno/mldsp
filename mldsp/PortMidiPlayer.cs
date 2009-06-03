@@ -22,6 +22,7 @@ namespace Commons.Music.Midi.Player
 
 		public override void Dispose ()
 		{
+			base.Dispose ();
 			if (output != null)
 				output.Dispose ();
 		}

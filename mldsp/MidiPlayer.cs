@@ -37,6 +37,9 @@ namespace Commons.Music.Midi.Player
 
 		public virtual void Dispose ()
 		{
+			if (!stop)
+				Stop ();
+			Mute ();
 		}
 
 		public void Play ()
@@ -45,15 +48,30 @@ namespace Commons.Music.Midi.Player
 				pause_handle.Set ();
 		}
 
+		void AllControlReset ()
+		{
+			for (int i = 0; i < 16; i++)
+				OnMessage (new SmfEvent (0, new SmfMessage ((byte) (i + 0xB0), 0x79, 0, null)));
+		}
+
+		void Mute ()
+		{
+			for (int i = 0; i < 16; i++)
+				OnMessage (new SmfEvent (0, new SmfMessage ((byte) (i + 0xB0), 0x78, 0, null)));
+		}
+
 		public void Pause ()
 		{
 			pause = true;
+			Mute ();
 		}
 
 		int event_idx = 0;
 
 		public void PlayerLoop ()
 		{
+			Mute ();
+			AllControlReset ();
 			try {
 				while (true) {
 					pause_handle.WaitOne ();
@@ -115,9 +133,10 @@ namespace Commons.Music.Midi.Player
 
 		public void Stop ()
 		{
+			stop = true;
+			Mute ();
 			if (pause_handle != null)
 				pause_handle.Set ();
-			stop = true;
 		}
 	}
 
@@ -147,6 +166,7 @@ namespace Commons.Music.Midi.Player
 
 		public virtual void Dispose ()
 		{
+			player.Stop ();
 			switch (sync_player_thread.ThreadState) {
 			case ThreadState.Stopped:
 			case ThreadState.AbortRequested:
