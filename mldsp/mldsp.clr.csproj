@@ -30,12 +30,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Windows, Version=3.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <Reference Include="System.Core" />
-    <Reference Include="Processing.Core.CLR, Version=0.1.0.1632, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\tsukimi\build\Processing.Core.CLR.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Windows, Version=3.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <Reference Include="Processing.Core.CLR, Version=0.1.0.1632, Culture=neutral, PublicKeyToken=null" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.xaml">
@@ -49,6 +46,7 @@
     <Compile Include="mldsp_app.cs" />
     <Compile Include="App.xaml.cs" />
     <Compile Include="PortMidiSharp.cs" />
+    <Compile Include="MidiMachine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

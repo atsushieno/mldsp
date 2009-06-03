@@ -38,6 +38,7 @@ namespace mldsp
 		Dispatcher disp;
 		MidiOutput output;
 		MidiPlayer player;
+		MidiMachine registers;
 
 		void SelectFile ()
 		{
@@ -80,8 +81,12 @@ namespace mldsp
 			}
 			Music = reader.Music;
 			player = new MidiPlayer (Music);
-			player.MessageReceived += delegate(SmfEvent ev) {
-				disp.BeginInvoke (() => HandleSmfEvent (ev));
+			registers = new MidiMachine ();
+			player.MessageReceived += delegate (SmfMessage m) {
+				registers.ProcessMessage (m);
+			};
+			registers.MessageReceived += delegate (SmfMessage m) {
+				disp.BeginInvoke (() => HandleSmfMessage (m));
 			};
 
 			player.StartLoop ();
@@ -106,25 +111,26 @@ namespace mldsp
 				return -1;
 			return note;
 		}
-		public void HandleSmfEvent (SmfEvent e)
+
+		void HandleSmfMessage (SmfMessage m)
 		{
-			switch (e.Message.MessageType) {
+			switch (m.MessageType) {
 			case SmfMessage.NoteOn:
-				if (e.Message.Lsb == 0)
+				if (m.Lsb == 0)
 					goto case SmfMessage.NoteOff; // It is equivalent to note off
-				int note = GetKeyIndexForNote (e.Message.Msb);
+				int note = GetKeyIndexForNote (m.Msb);
 				if (note < 0)
 					break; // out of range
-				key_rectangles [e.Message.Channel, note].Fill = new SolidColorBrush (color_keyon);
+				key_rectangles [m.Channel, note].Fill = new SolidColorBrush (color_keyon);
 				break;
 			case SmfMessage.NoteOff:
-				note = GetKeyIndexForNote (e.Message.Msb);
+				note = GetKeyIndexForNote (m.Msb);
 				if (note < 0)
 					break; // out of range
 				if (IsWhiteKey (note))
-					key_rectangles [e.Message.Channel, note].Fill = new SolidColorBrush (color_white_key);
+					key_rectangles [m.Channel, note].Fill = new SolidColorBrush (color_white_key);
 				else
-					key_rectangles [e.Message.Channel, note].Fill = new SolidColorBrush (color_black_key);
+					key_rectangles [m.Channel, note].Fill = new SolidColorBrush (color_black_key);
 				break;
 			}
 		}

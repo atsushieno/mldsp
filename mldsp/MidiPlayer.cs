@@ -14,8 +14,6 @@ namespace Commons.Music.Midi.Player
 		Paused
 	}
 
-	public delegate void MidiMessageAction (SmfEvent ev);
-
 	// Player implementation. Plays a MIDI song synchronously.
 	public class MidiSyncPlayer : IDisposable
 	{
@@ -51,13 +49,13 @@ namespace Commons.Music.Midi.Player
 		void AllControlReset ()
 		{
 			for (int i = 0; i < 16; i++)
-				OnMessage (new SmfEvent (0, new SmfMessage ((byte) (i + 0xB0), 0x79, 0, null)));
+				OnMessage (new SmfMessage ((byte) (i + 0xB0), 0x79, 0, null));
 		}
 
 		void Mute ()
 		{
 			for (int i = 0; i < 16; i++)
-				OnMessage (new SmfEvent (0, new SmfMessage ((byte) (i + 0xB0), 0x78, 0, null)));
+				OnMessage (new SmfMessage ((byte) (i + 0xB0), 0x78, 0, null));
 		}
 
 		public void Pause ()
@@ -119,16 +117,16 @@ namespace Commons.Music.Midi.Player
 			if (e.Message.StatusByte == 0xFF && e.Message.Msb == 0x51)
 				current_tempo = (e.Message.Data [0] << 16) + (e.Message.Data [1] << 8) + e.Message.Data [2];
 
-			OnMessage (e);
+			OnMessage (e.Message);
 			PlayDeltaTime += e.DeltaTime;
 		}
 
 		public MidiMessageAction MessageReceived;
 
-		protected virtual void OnMessage (SmfEvent e)
+		protected virtual void OnMessage (SmfMessage m)
 		{
 			if (MessageReceived != null)
-				MessageReceived (e);
+				MessageReceived (m);
 		}
 
 		public void Stop ()

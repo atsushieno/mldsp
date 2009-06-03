@@ -15,7 +15,7 @@ namespace Commons.Music.Midi.Player
 			: base (music)
 		{
 			this.output = output;
-			MessageReceived += delegate (SmfEvent ev) { SendMidiMessage (ev); };
+			MessageReceived += delegate (SmfMessage m) { SendMidiMessage (m); };
 		}
 
 		MidiOutput output;
@@ -27,16 +27,16 @@ namespace Commons.Music.Midi.Player
 				output.Dispose ();
 		}
 
-		void SendMidiMessage (SmfEvent e)
+		void SendMidiMessage (SmfMessage m)
 		{
-			if ((e.Message.Value & 0xFF) == 0xF0)
-				WriteSysEx (0xF0, e.Message.Data);
-			else if ((e.Message.Value & 0xFF) == 0xF7)
-				WriteSysEx (0xF7, e.Message.Data);
-			else if ((e.Message.Value & 0xFF) == 0xFF)
+			if ((m.Value & 0xFF) == 0xF0)
+				WriteSysEx (0xF0, m.Data);
+			else if ((m.Value & 0xFF) == 0xF7)
+				WriteSysEx (0xF7, m.Data);
+			else if ((m.Value & 0xFF) == 0xFF)
 				return; // meta. Nothing to send.
 			else
-				output.Write (0, new MidiMessage (e.Message.StatusByte, e.Message.Msb, e.Message.Lsb));
+				output.Write (0, new MidiMessage (m.StatusByte, m.Msb, m.Lsb));
 		}
 
 		void WriteSysEx (byte status, byte [] sysex)
