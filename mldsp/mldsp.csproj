@@ -51,9 +51,9 @@
     <Reference Include="System">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="Processing.Core, Version=0.1.5.3150, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Processing.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\tsukimi\Processing.Core\bin\Debug\Processing.Core.dll</HintPath>
+      <HintPath>..\build\Processing.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

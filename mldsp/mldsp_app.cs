@@ -80,7 +80,11 @@ namespace mldsp
 				// FIXME: it should dispose the player, but it causes crash
 			}
 			Music = reader.Music;
+#if Moonlight
 			player = new MidiPlayer (Music);
+#else
+			player = new PortMidiPlayer (output, Music);
+#endif
 			registers = new MidiMachine ();
 			player.MessageReceived += delegate (SmfMessage m) {
 				registers.ProcessMessage (m);
