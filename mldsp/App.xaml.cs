@@ -39,6 +39,7 @@ internal static System.Windows.Media.Color color_black_key_edge;
 internal static System.Windows.Media.Color color_keyon;
 internal static System.Windows.Media.Color color_aftertouch;
 internal static System.Windows.Media.Color color_bend;
+internal static System.Windows.Media.Color color_hold;
 internal static System.Windows.Media.Color color_bright;
 internal static System.Windows.Media.Color color_usual;
 internal static System.Windows.Media.Color color_dark;
@@ -188,11 +189,11 @@ ProcessingApplication.Current.@line (340, getChannelYPos (channel) + 2, 360, get
 ProcessingApplication.Current.@fill (color_ch_text_colored);
 ProcessingApplication.Current.@text (ProcessingApplication.Current.@nf (1000, 5), 364, getChannelYPos (channel) + text_height);
 ProcessingApplication.Current.@fill (color_ch_text_base);
-ProcessingApplication.Current.@text (@"KN:o" + ProcessingApplication.Current.@nf (5, 1) + @"c", 80, yText2);
-ProcessingApplication.Current.@text (@"TN:" + ProcessingApplication.Current.@nf (1, 3) + "/" + ProcessingApplication.Current.@nf (0, 3), 130, yText2);
-ProcessingApplication.Current.@text ("VEL:\u25B2" + ProcessingApplication.Current.@nf (110, 3), 200, yText2);
-ProcessingApplication.Current.@text ("EXP:\u25BC" + ProcessingApplication.Current.@nf (8, 3), 250, yText2);
-ProcessingApplication.Current.@text (@"DT:" + ProcessingApplication.Current.@nf (8 * -1, 3), 300, yText2);
+//ProcessingApplication.Current.@text (@"KN:o" + ProcessingApplication.Current.@nf (5, 1) + @"c", 80, yText2);
+//ProcessingApplication.Current.@text (@"TN:" + ProcessingApplication.Current.@nf (1, 3) + "/" + ProcessingApplication.Current.@nf (0, 3), 130, yText2);
+//ProcessingApplication.Current.@text ("VEL:\u25B2" + ProcessingApplication.Current.@nf (110, 3), 200, yText2);
+//ProcessingApplication.Current.@text ("EXP:\u25BC" + ProcessingApplication.Current.@nf (8, 3), 250, yText2);
+//ProcessingApplication.Current.@text (@"DT:" + ProcessingApplication.Current.@nf (8 * -1, 3), 300, yText2);
 ProcessingApplication.Current.@text (@"M:--------", 340, yText2);
 }
 public static void setupKeyboard (int channel)
@@ -289,7 +290,8 @@ color_black_key = ProcessingApplication.Current.color ("#000000");
 color_black_key_edge = ProcessingApplication.Current.color ("#FfFfFf");
 color_keyon = ProcessingApplication.Current.color ("#FfFf00");
 color_aftertouch = ProcessingApplication.Current.color ("#Ff8000");
-color_bend = ProcessingApplication.Current.color ("#00Ff80");
+color_bend = ProcessingApplication.Current.color ("#0080Ff");
+color_hold = ProcessingApplication.Current.color ("#0080C0");
 color_bright = ProcessingApplication.Current.color ("#FfFfE0");
 color_usual = ProcessingApplication.Current.color ("#3060C0");
 color_dark = ProcessingApplication.Current.color ("#1830C0");

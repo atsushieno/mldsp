@@ -26,6 +26,27 @@ namespace mldsp
 
 		protected override void OnApplicationSetup ()
 		{
+			AddFileSelectionTextBoxHack ();
+			AddParameterVisualizer ();
+		}
+		
+		public ParameterVisualizerPanel [] ParameterVisualizers { get; private set; }
+
+		void AddParameterVisualizer ()
+		{
+			ParameterVisualizers = new ParameterVisualizerPanel [16];
+			for (int i = 0; i < ParameterVisualizers.Length; i++) {
+				var p = new ParameterVisualizerPanel ();
+				p.Location = new Point (80, i * 36);
+				p.FontSize = 7;
+				p.Foreground = new SolidColorBrush (Color.FromArgb (255, 192, 192, 255));
+				ParameterVisualizers [i] = p;
+				Host.Children.Add (p);
+			}
+		}
+
+		void AddFileSelectionTextBoxHack ()
+		{
 			TextBlock tb = new TextBlock () { Width = 300, Height = 50 };
 			tb.Text = "Click Here and select a MIDI file (it sometimes fails; retry in such case)";
 			tb.Foreground = new SolidColorBrush (Color.FromArgb (255, 255, 255, 255));
@@ -131,10 +152,49 @@ namespace mldsp
 				note = GetKeyIndexForNote (m.Msb);
 				if (note < 0)
 					break; // out of range
-				if (IsWhiteKey (note))
-					key_rectangles [m.Channel, note].Fill = new SolidColorBrush (color_white_key);
-				else
-					key_rectangles [m.Channel, note].Fill = new SolidColorBrush (color_black_key);
+				Color c = registers.Channels [m.Channel].Controls [0x40] > 63 ? color_hold :
+					IsWhiteKey (note) ? color_white_key : color_black_key;
+				key_rectangles [m.Channel, note].Fill = new SolidColorBrush (c);
+				break;
+			case SmfMessage.CC:
+				switch (m.Msb) {
+				case 7:
+					ParameterVisualizers [m.Channel].Volume.SetValue (m.Lsb);
+					break;
+				case 0x0B:
+					ParameterVisualizers [m.Channel].Expression.SetValue (m.Lsb);
+					break;
+				case 0x5B:
+					ParameterVisualizers [m.Channel].Rsd.SetValue (m.Lsb);
+					break;
+				case 0x5D:
+					ParameterVisualizers [m.Channel].Csd.SetValue (m.Lsb);
+					break;
+				case 0x40:
+					ParameterVisualizers [m.Channel].Hold.Value = (m.Lsb > 63);
+					if (m.Lsb < 64 && key_rectangles != null) { // reset held keys to nothing
+						for (int i = 0; i < 128; i++) {
+							note = GetKeyIndexForNote (i);
+							if (note < 0)
+								continue;
+							var rect = key_rectangles [m.Channel, note];
+							if (rect == null)
+								continue;
+							if (((SolidColorBrush) rect.Fill).Color == color_hold)
+								key_rectangles [m.Channel, note].Fill = new SolidColorBrush (IsWhiteKey (i) ? color_white_key : color_black_key);
+						}
+					}
+					break;
+				case 0x41:
+					ParameterVisualizers [m.Channel].PortamentoSwitch.Value = (m.Lsb > 63);
+					break;
+				case 0x42:
+					ParameterVisualizers [m.Channel].Sostenuto.Value = (m.Lsb > 63);
+					break;
+				case 0x43:
+					ParameterVisualizers [m.Channel].SoftPedal.Value = (m.Lsb > 63);
+					break;
+				}
 				break;
 			}
 		}
