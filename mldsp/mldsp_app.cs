@@ -37,7 +37,7 @@ namespace mldsp
 			ParameterVisualizers = new ParameterVisualizerPanel [16];
 			for (int i = 0; i < ParameterVisualizers.Length; i++) {
 				var p = new ParameterVisualizerPanel ();
-				p.Location = new Point (80, i * 36);
+				p.Location = new Point (80, i * 32);
 				p.FontSize = 7;
 				p.Foreground = new SolidColorBrush (Color.FromArgb (255, 192, 192, 255));
 				ParameterVisualizers [i] = p;
@@ -158,19 +158,19 @@ namespace mldsp
 				break;
 			case SmfMessage.CC:
 				switch (m.Msb) {
-				case 7:
+				case SmfCC.Volume:
 					ParameterVisualizers [m.Channel].Volume.SetValue (m.Lsb);
 					break;
-				case 0x0B:
+				case SmfCC.Expression:
 					ParameterVisualizers [m.Channel].Expression.SetValue (m.Lsb);
 					break;
-				case 0x5B:
+				case SmfCC.Rsd:
 					ParameterVisualizers [m.Channel].Rsd.SetValue (m.Lsb);
 					break;
-				case 0x5D:
+				case SmfCC.Csd:
 					ParameterVisualizers [m.Channel].Csd.SetValue (m.Lsb);
 					break;
-				case 0x40:
+				case SmfCC.Hold:
 					ParameterVisualizers [m.Channel].Hold.Value = (m.Lsb > 63);
 					if (m.Lsb < 64 && key_rectangles != null) { // reset held keys to nothing
 						for (int i = 0; i < 128; i++) {
@@ -185,13 +185,13 @@ namespace mldsp
 						}
 					}
 					break;
-				case 0x41:
+				case SmfCC.PortamentoSwitch:
 					ParameterVisualizers [m.Channel].PortamentoSwitch.Value = (m.Lsb > 63);
 					break;
-				case 0x42:
+				case SmfCC.Sostenuto:
 					ParameterVisualizers [m.Channel].Sostenuto.Value = (m.Lsb > 63);
 					break;
-				case 0x43:
+				case SmfCC.SoftPedal:
 					ParameterVisualizers [m.Channel].SoftPedal.Value = (m.Lsb > 63);
 					break;
 				}

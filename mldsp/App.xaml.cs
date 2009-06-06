@@ -277,10 +277,10 @@ public static void Run ()
 all_keys = 128 - 24;
 channels = 16;
 key_width = 7;
-key_height = 20;
+key_height = 16;
 blackKeyWidth = key_width * 0.4;
 blackKeyHeight = key_height / 2;
-ch_height = 36;
+ch_height = 32;
 text_height = 8;
 play_info_section_width = 200;
 color_background = ProcessingApplication.Current.color ("#000008");
