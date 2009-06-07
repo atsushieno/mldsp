@@ -35,16 +35,17 @@ namespace Commons.Music.Midi.Player
 
 			this.music = music;
 			events = SmfTrackMerger.Merge (music).Tracks [0].Events;
-			stop = true;
+			state = PlayerState.Stopped;
 		}
 
 		SmfMusic music;
 		IList<SmfEvent> events;
-		ManualResetEvent pause_handle = new ManualResetEvent (true);
-		bool pause, stop;
+		ManualResetEvent pause_handle = new ManualResetEvent (false);
+		PlayerState state;
+		bool do_pause, do_stop;
 
 		public PlayerState State {
-			get { return stop ? PlayerState.Stopped : pause ? PlayerState.Paused : PlayerState.Playing; }
+			get { return state; }
 		}
 		public int PlayDeltaTime { get; set; }
 		public int Tempo {
@@ -57,15 +58,15 @@ namespace Commons.Music.Midi.Player
 
 		public virtual void Dispose ()
 		{
-			if (!stop)
+			if (state != PlayerState.Stopped)
 				Stop ();
 			Mute ();
 		}
 
 		public void Play ()
 		{
-			if (pause_handle != null)
-				pause_handle.Set ();
+			pause_handle.Set ();
+			state = PlayerState.Playing;
 		}
 
 		void AllControlReset ()
@@ -82,7 +83,7 @@ namespace Commons.Music.Midi.Player
 
 		public void Pause ()
 		{
-			pause = true;
+			do_pause = true;
 			Mute ();
 		}
 
@@ -90,26 +91,26 @@ namespace Commons.Music.Midi.Player
 
 		public void PlayerLoop ()
 		{
-			stop = false;
-			Mute ();
 			AllControlReset ();
-			try {
+			{
 				while (true) {
 					pause_handle.WaitOne ();
-					if (stop)
+					if (do_stop)
 						break;
-					if (pause) {
+					if (do_pause) {
 						pause_handle.Reset ();
-						pause = false;
+						do_pause = false;
+						state = PlayerState.Paused;
 						continue;
 					}
 					if (event_idx == events.Count)
 						break;
 					HandleEvent (events [event_idx++]);
 				}
-			} catch (ThreadAbortException ex) {
-				// FIXME: call pause (to shut down all notes)
-				// FIXME: call ResetAbort()
+				do_stop = false;
+				Mute ();
+				state = PlayerState.Stopped;
+				event_idx = 0;
 			}
 		}
 
@@ -154,12 +155,11 @@ namespace Commons.Music.Midi.Player
 
 		public void Stop ()
 		{
-			if (stop)
-				return;
-			stop = true;
-			Mute ();
-			if (pause_handle != null)
-				pause_handle.Set ();
+			if (state != PlayerState.Stopped) {
+				do_stop = true;
+				if (pause_handle != null)
+					pause_handle.Set ();
+			}
 		}
 	}
 
@@ -171,16 +171,13 @@ namespace Commons.Music.Midi.Player
 
 		public MidiPlayer (SmfMusic music)
 		{
-			State = PlayerState.Stopped;
 			player = new MidiSyncPlayer (music);
-			player.Pause ();
-			ThreadStart ts = delegate {
-				player.PlayerLoop ();
-				};
-			sync_player_thread = new Thread (ts);
 		}
 
-		public PlayerState State { get; private set; }
+		public PlayerState State {
+			get { return player.State; }
+		}
+
 		public int Tempo {
 			get { return player.Tempo; }
 		}
@@ -204,22 +201,23 @@ namespace Commons.Music.Midi.Player
 
 		public void StartLoop ()
 		{
+			ThreadStart ts = delegate { player.PlayerLoop (); };
+			sync_player_thread = new Thread (ts);
 			sync_player_thread.Start ();
 		}
 
 		public void PlayAsync ()
 		{
-TextWriter.Null.WriteLine ("STATE: " + State); // FIXME: mono somehow fails to initialize this auto property.
 			switch (State) {
 			case PlayerState.Playing:
 				return; // do nothing
 			case PlayerState.Paused:
 				player.Play ();
-				State = PlayerState.Playing;
 				return;
 			case PlayerState.Stopped:
+				if (sync_player_thread == null || !sync_player_thread.IsAlive)
+					StartLoop ();
 				player.Play ();
-				State = PlayerState.Playing;
 				return;
 			}
 		}
@@ -229,7 +227,6 @@ TextWriter.Null.WriteLine ("STATE: " + State); // FIXME: mono somehow fails to i
 			switch (State) {
 			case PlayerState.Playing:
 				player.Pause ();
-				State = PlayerState.Paused;
 				return;
 			default: // do nothing
 				return;
