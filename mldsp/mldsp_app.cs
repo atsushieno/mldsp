@@ -26,7 +26,6 @@ namespace mldsp
 
 		protected override void OnApplicationSetup ()
 		{
-			AddFileSelectionTextBoxHack ();
 			AddParameterVisualizer ();
 			AddPlayerStatusPanel ();
 			AddPlayTimeStatusPanel ();
@@ -57,7 +56,7 @@ namespace mldsp
 			p.LabelFontSize = 10;
 			p.ValueFontSize = 16;
 			p.Brush = new SolidColorBrush (color_usual);
-			Canvas.SetLeft (p, 600);
+			Canvas.SetLeft (p, 560);
 			Canvas.SetTop (p, 50);
 			Host.Children.Add (p);
 			play_time_status_panel = p;
@@ -78,17 +77,6 @@ namespace mldsp
 				ParameterVisualizers [i] = p;
 				Host.Children.Add (p);
 			}
-		}
-
-		void AddFileSelectionTextBoxHack ()
-		{
-			TextBlock tb = new TextBlock () { Width = 300, Height = 50 };
-			tb.Text = "Click Here and select a MIDI file (it sometimes fails; retry in such case)";
-			tb.Foreground = new SolidColorBrush (Color.FromArgb (255, 255, 255, 255));
-			Canvas.SetLeft (tb, 400);
-			Canvas.SetTop (tb, 400);
-			tb.MouseLeftButtonUp += delegate { SelectFile (); };
-			Host.Children.Add (tb);
 		}
 
 		Dispatcher disp;

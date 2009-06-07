@@ -13,25 +13,25 @@ namespace mldsp
 	{
 		public PlayerStatusPanel ()
 		{
-			progress_slot = new Rectangle () { Width = 180, Height = 8 };
+			progress_slot = new Rectangle () { Width = 140, Height = 8 };
 			Canvas.SetTop (progress_slot, 0);
 			Canvas.SetLeft (progress_slot, 10);
 			progress = new Rectangle () { Width = 0, Height = 8 };
 			Canvas.SetTop (progress, 10);
 			Canvas.SetLeft (progress, 10);
-			AddText (PlayerState.Playing, "Play", 50, 20, null,
+			AddText (PlayerState.Playing, "Play", 40, 20, null,
 			         delegate (object o, MouseButtonEventArgs a) { if (PlayClicked != null) PlayClicked (o, a); });
-			AddText (PlayerState.Paused, "Pause", 90, 20, null,
+			AddText (PlayerState.Paused, "Pause", 80, 20, null,
 			         delegate (object o, MouseButtonEventArgs a) { if (PauseClicked != null) PauseClicked (o, a); });
-			AddText (PlayerState.Stopped, "Stop", 130, 20, null,
+			AddText (PlayerState.Stopped, "Stop", 120, 20, null,
 			         delegate (object o, MouseButtonEventArgs a) { if (StopClicked != null) StopClicked (o, a); });
-			AddText (PlayerState.FastForward, "FF", 50, 34,
+			AddText (PlayerState.FastForward, "FF", 40, 34,
 			         delegate (object o, MouseButtonEventArgs a) { if (FastForwardMouseDown != null) FastForwardMouseDown (o, a); },
 			         delegate (object o, MouseButtonEventArgs a) { if (FastForwardMouseUp != null) FastForwardMouseUp (o, a); });
-			AddText (PlayerState.Rewind, "Rew", 90, 34,
+			AddText (PlayerState.Rewind, "Rew", 80, 34,
 			         delegate (object o, MouseButtonEventArgs a) { if (RewindMouseDown != null) RewindMouseDown (o, a); },
 			         delegate (object o, MouseButtonEventArgs a) { if (RewindMouseUp != null) RewindMouseUp (o, a); });
-			AddText (PlayerState.Loading, "Load", 130, 34, null,
+			AddText (PlayerState.Loading, "Load", 120, 34, null,
 			         delegate (object o, MouseButtonEventArgs a) { if (LoadClicked != null) LoadClicked (o, a); });
 
 			Children.Add (progress_slot);
