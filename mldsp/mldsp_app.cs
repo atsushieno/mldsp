@@ -33,17 +33,17 @@ namespace mldsp
 
 		void AddPlayStatusPanel ()
 		{
-			var p = new PlayStatusPanel ();
+			var p = new PlayTimeStatusPanel ();
 			p.LabelFontSize = 10;
 			p.ValueFontSize = 16;
 			p.Brush = new SolidColorBrush (color_usual);
 			Canvas.SetLeft (p, 600);
 			Canvas.SetTop (p, 50);
 			Host.Children.Add (p);
-			play_status_panel = p;
+			play_time_status_panel = p;
 		}
 
-		PlayStatusPanel play_status_panel;
+		PlayTimeStatusPanel play_time_status_panel;
 		public ParameterVisualizerPanel [] ParameterVisualizers { get; private set; }
 
 		void AddParameterVisualizer ()
@@ -128,7 +128,7 @@ namespace mldsp
 				disp.BeginInvoke (() => HandleSmfMessage (m));
 			};
 
-			play_status_panel.TotalTime = player.GetTotalPlayTimeMilliseconds ();
+			play_time_status_panel.TotalTime = player.GetTotalPlayTimeMilliseconds ();
 			player.StartLoop ();
 			player.PlayAsync ();
 		}
@@ -214,7 +214,7 @@ namespace mldsp
 			case SmfMessage.Meta:
 				switch (m.MetaType) {
 				case SmfMetaType.Tempo:
-					this.play_status_panel.Tempo = (int) ((60.0 / SmfMetaType.GetTempo (m.Data)) * 1000000.0);
+					this.play_time_status_panel.Tempo = (int) ((60.0 / SmfMetaType.GetTempo (m.Data)) * 1000000.0);
 					break;
 				}
 				break;

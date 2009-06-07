@@ -7,11 +7,11 @@ using System.Windows.Shapes;
 
 namespace mldsp
 {
-	public class PlayStatusPanel : Canvas
+	public class PlayTimeStatusPanel : Canvas
 	{
-		public PlayStatusPanel ()
+		public PlayTimeStatusPanel ()
 		{
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 4; i++) {
 				var r = new Rectangle () { Width = 5, Height = 18 };
 				Canvas.SetTop (r, i * 22 + 6);
 				Canvas.SetLeft (r, 1);
@@ -25,8 +25,6 @@ namespace mldsp
 			AddText ("Tick", 8, 46, true);
 			AddText ("Count", 12, 56, true);
 			AddText ("Tempo", 8, 68, true);
-			AddText ("Volume", 8, 90, true);
-			AddText ("Ratio", 12, 100, true);
 
 			AddText ("00:00:00", 60, 2, false);
 			passed_time = last;
@@ -38,9 +36,6 @@ namespace mldsp
 			AddText ("00000000", 60, 68, false);
 			tempo = last;
 			tempo.Tag = 0;
-			AddText ("100%", 60, 90, false);
-			volume_ratio = last;
-			volume_ratio.Tag = 0;
 			last = null;
 		}
 
@@ -48,7 +43,6 @@ namespace mldsp
 		TextBlock total_time;
 		TextBlock tick_count;
 		TextBlock tempo;
-		TextBlock volume_ratio;
 
 		public int TotalTime {
 			get { return (int) total_time.Tag; }
@@ -64,14 +58,6 @@ namespace mldsp
 			set {
 				tempo.Tag = value;
 				tempo.Text = value.ToString ("D08");
-			}
-		}
-
-		public int VolumeRatio {
-			get { return (int) volume_ratio.Tag; }
-			set {
-				volume_ratio.Tag = value;
-				volume_ratio.Text = value.ToString ("D02%");
 			}
 		}
 
