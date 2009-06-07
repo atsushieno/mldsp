@@ -154,6 +154,8 @@ namespace Commons.Music.Midi.Player
 
 		public void Stop ()
 		{
+			if (stop)
+				return;
 			stop = true;
 			Mute ();
 			if (pause_handle != null)
@@ -171,8 +173,8 @@ namespace Commons.Music.Midi.Player
 		{
 			State = PlayerState.Stopped;
 			player = new MidiSyncPlayer (music);
+			player.Pause ();
 			ThreadStart ts = delegate {
-				player.Pause ();
 				player.PlayerLoop ();
 				};
 			sync_player_thread = new Thread (ts);
@@ -198,15 +200,6 @@ namespace Commons.Music.Midi.Player
 		public virtual void Dispose ()
 		{
 			player.Stop ();
-			switch (sync_player_thread.ThreadState) {
-			case ThreadState.Stopped:
-			case ThreadState.AbortRequested:
-			case ThreadState.Aborted:
-				break;
-			default:
-				sync_player_thread.Abort ();
-				break;
-			}
 		}
 
 		public void StartLoop ()

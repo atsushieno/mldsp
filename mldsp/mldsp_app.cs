@@ -40,6 +40,11 @@ namespace mldsp
 			p.ActiveBrush = new SolidColorBrush (color_ch_colored);
 			Canvas.SetLeft (p, 400);
 			Canvas.SetTop (p, 50);
+			p.PlayClicked += delegate { Play (); };
+			p.PauseClicked += delegate { Pause (); };
+			p.StopClicked += delegate { Stop (); };
+			p.LoadClicked += delegate { SelectFile (); };
+			
 			Host.Children.Add (p);
 			player_status_panel = p;
 		}
@@ -100,7 +105,8 @@ namespace mldsp
 			dialog.Multiselect = false;
 			if ((bool) dialog.ShowDialog ()) {
 				try {
-					Play (dialog.File, dialog.File.OpenRead ());
+					LoadFile (dialog.File, dialog.File.OpenRead ());
+					Play ();
 				} catch (Exception ex) {
 #if Moonlight
 					System.Windows.Browser.HtmlPage.Window.Alert (ex.ToString ());
@@ -115,8 +121,9 @@ namespace mldsp
 
 		public int? OutputDeviceID { get; set; }
 
-		public void Play (FileInfo filename, Stream stream)
+		public void LoadFile (FileInfo filename, Stream stream)
 		{
+			Stop ();
 #if !Moonlight
 			if (output == null)
 				output = MidiDeviceManager.OpenOutput (OutputDeviceID ?? MidiDeviceManager.DefaultOutputDeviceID);
@@ -124,10 +131,6 @@ namespace mldsp
 #endif
 			var reader = new SmfReader (stream);
 			reader.Parse ();
-			if (player != null) {
-				player.PauseAsync ();
-				// FIXME: it should dispose the player, but it causes crash
-			}
 			Music = reader.Music;
 #if Moonlight
 			player = new MidiPlayer (Music);
@@ -144,8 +147,30 @@ namespace mldsp
 
 			play_time_status_panel.TotalTime = player.GetTotalPlayTimeMilliseconds ();
 			player.StartLoop ();
-			player.PlayAsync ();
-			player_status_panel.State = player.State;
+		}
+		
+		public void Pause ()
+		{
+			if (player != null) {
+				player.PauseAsync ();
+				player_status_panel.State = PlayerState.Paused;
+			}
+		}
+
+		public void Stop ()
+		{
+			if (player != null) {
+				player.Dispose ();
+				player_status_panel.State = PlayerState.Stopped;
+			}
+		}
+
+		public void Play ()
+		{
+			if (player != null) {
+				player.PlayAsync ();
+				player_status_panel.State = PlayerState.Playing;
+			}
 		}
 
 		static readonly int [] key_to_keyboard_idx = {0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6};
