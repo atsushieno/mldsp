@@ -14,8 +14,15 @@ namespace Commons.Music.Midi.Player
 		Paused
 	}
 
+	public interface IMidiPlayerStatus
+	{
+		PlayerState State { get; }
+		int Tempo { get; }
+		int PlayDeltaTime { get; }
+	}
+
 	// Player implementation. Plays a MIDI song synchronously.
-	public class MidiSyncPlayer : IDisposable
+	public class MidiSyncPlayer : IDisposable, IMidiPlayerStatus
 	{
 		public MidiSyncPlayer (SmfMusic music)
 		{
@@ -24,6 +31,7 @@ namespace Commons.Music.Midi.Player
 
 			this.music = music;
 			events = SmfTrackMerger.Merge (music).Tracks [0].Events;
+			stop = true;
 		}
 
 		SmfMusic music;
@@ -31,7 +39,13 @@ namespace Commons.Music.Midi.Player
 		ManualResetEvent pause_handle = new ManualResetEvent (true);
 		bool pause, stop;
 
+		public PlayerState State {
+			get { return stop ? PlayerState.Stopped : pause ? PlayerState.Paused : PlayerState.Playing; }
+		}
 		public int PlayDeltaTime { get; set; }
+		public int Tempo {
+			get { return current_tempo; }
+		}
 
 		public virtual void Dispose ()
 		{
@@ -68,6 +82,7 @@ namespace Commons.Music.Midi.Player
 
 		public void PlayerLoop ()
 		{
+			stop = false;
 			Mute ();
 			AllControlReset ();
 			try {
@@ -139,7 +154,7 @@ namespace Commons.Music.Midi.Player
 	}
 
 	// Provides asynchronous player control.
-	public class MidiPlayer : IDisposable
+	public class MidiPlayer : IDisposable, IMidiPlayerStatus
 	{
 		MidiSyncPlayer player;
 		Thread sync_player_thread;
@@ -155,7 +170,13 @@ namespace Commons.Music.Midi.Player
 			sync_player_thread = new Thread (ts);
 		}
 
-		public PlayerState State { get; set; }
+		public PlayerState State { get; private set; }
+		public int Tempo {
+			get { return player.Tempo; }
+		}
+		public int PlayDeltaTime {
+			get { return player.PlayDeltaTime; }
+		}
 
 		public event MidiMessageAction MessageReceived {
 			add { player.MessageReceived += value; }
