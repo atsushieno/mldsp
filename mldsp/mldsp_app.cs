@@ -24,6 +24,10 @@ namespace mldsp
 		static Panel white_key_panel, black_key_panel;
 		static Rectangle [,] key_rectangles = new Rectangle [16,128 - 24];
 
+		PlayerStatusPanel player_status_panel;
+		PlayTimeStatusPanel play_time_status_panel;
+		ParameterVisualizerPanel [] parameter_visualizers;
+
 		protected override void OnApplicationSetup ()
 		{
 			AddParameterVisualizer ();
@@ -62,19 +66,15 @@ namespace mldsp
 			play_time_status_panel = p;
 		}
 
-		PlayerStatusPanel player_status_panel;
-		PlayTimeStatusPanel play_time_status_panel;
-		public ParameterVisualizerPanel [] ParameterVisualizers { get; private set; }
-
 		void AddParameterVisualizer ()
 		{
-			ParameterVisualizers = new ParameterVisualizerPanel [16];
-			for (int i = 0; i < ParameterVisualizers.Length; i++) {
+			parameter_visualizers = new ParameterVisualizerPanel [16];
+			for (int i = 0; i < parameter_visualizers.Length; i++) {
 				var p = new ParameterVisualizerPanel ();
 				p.Location = new Point (80, i * 32);
 				p.FontSize = 7;
 				p.Foreground = new SolidColorBrush (Color.FromArgb (255, 96, 160, 255));
-				ParameterVisualizers [i] = p;
+				parameter_visualizers [i] = p;
 				Host.Children.Add (p);
 			}
 		}
@@ -214,19 +214,19 @@ namespace mldsp
 			case SmfMessage.CC:
 				switch (m.Msb) {
 				case SmfCC.Volume:
-					ParameterVisualizers [m.Channel].Volume.SetValue (m.Lsb);
+					parameter_visualizers [m.Channel].Volume.SetValue (m.Lsb);
 					break;
 				case SmfCC.Expression:
-					ParameterVisualizers [m.Channel].Expression.SetValue (m.Lsb);
+					parameter_visualizers [m.Channel].Expression.SetValue (m.Lsb);
 					break;
 				case SmfCC.Rsd:
-					ParameterVisualizers [m.Channel].Rsd.SetValue (m.Lsb);
+					parameter_visualizers [m.Channel].Rsd.SetValue (m.Lsb);
 					break;
 				case SmfCC.Csd:
-					ParameterVisualizers [m.Channel].Csd.SetValue (m.Lsb);
+					parameter_visualizers [m.Channel].Csd.SetValue (m.Lsb);
 					break;
 				case SmfCC.Hold:
-					ParameterVisualizers [m.Channel].Hold.Value = (m.Lsb > 63);
+					parameter_visualizers [m.Channel].Hold.Value = (m.Lsb > 63);
 					if (m.Lsb < 64 && key_rectangles != null) { // reset held keys to nothing
 						for (int i = 0; i < 128; i++) {
 							note = GetKeyIndexForNote (i);
@@ -241,13 +241,13 @@ namespace mldsp
 					}
 					break;
 				case SmfCC.PortamentoSwitch:
-					ParameterVisualizers [m.Channel].PortamentoSwitch.Value = (m.Lsb > 63);
+					parameter_visualizers [m.Channel].PortamentoSwitch.Value = (m.Lsb > 63);
 					break;
 				case SmfCC.Sostenuto:
-					ParameterVisualizers [m.Channel].Sostenuto.Value = (m.Lsb > 63);
+					parameter_visualizers [m.Channel].Sostenuto.Value = (m.Lsb > 63);
 					break;
 				case SmfCC.SoftPedal:
-					ParameterVisualizers [m.Channel].SoftPedal.Value = (m.Lsb > 63);
+					parameter_visualizers [m.Channel].SoftPedal.Value = (m.Lsb > 63);
 					break;
 				}
 				break;

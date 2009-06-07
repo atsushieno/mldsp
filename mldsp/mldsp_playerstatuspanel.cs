@@ -14,7 +14,7 @@ namespace mldsp
 		public PlayerStatusPanel ()
 		{
 			progress_slot = new Rectangle () { Width = 140, Height = 8 };
-			Canvas.SetTop (progress_slot, 0);
+			Canvas.SetTop (progress_slot, 8);
 			Canvas.SetLeft (progress_slot, 10);
 			progress = new Rectangle () { Width = 0, Height = 8 };
 			Canvas.SetTop (progress, 10);
