@@ -105,7 +105,7 @@ namespace Commons.Music.Midi.Player
 			}
 		}
 
-		int current_tempo = 500000; // dummy
+		int current_tempo = SmfMetaType.DefaultTempo; // dummy
 		int tempo_ratio = 1;
 
 		int GetDeltaTimeInMilliseconds (int deltaTime)
@@ -129,8 +129,8 @@ namespace Commons.Music.Midi.Player
 				var ms = GetDeltaTimeInMilliseconds (e.DeltaTime);
 				Thread.Sleep (ms);
 			}
-			if (e.Message.StatusByte == 0xFF && e.Message.Msb == 0x51)
-				current_tempo = (e.Message.Data [0] << 16) + (e.Message.Data [1] << 8) + e.Message.Data [2];
+			if (e.Message.StatusByte == 0xFF && e.Message.Msb == SmfMetaType.Tempo)
+				current_tempo = SmfMetaType.GetTempo (e.Message.Data);
 
 			OnMessage (e.Message);
 			PlayDeltaTime += e.DeltaTime;

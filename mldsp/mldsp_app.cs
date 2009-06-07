@@ -40,8 +40,10 @@ namespace mldsp
 			Canvas.SetLeft (p, 600);
 			Canvas.SetTop (p, 50);
 			Host.Children.Add (p);
+			play_status_panel = p;
 		}
 
+		PlayStatusPanel play_status_panel;
 		public ParameterVisualizerPanel [] ParameterVisualizers { get; private set; }
 
 		void AddParameterVisualizer ()
@@ -205,6 +207,13 @@ namespace mldsp
 					break;
 				case SmfCC.SoftPedal:
 					ParameterVisualizers [m.Channel].SoftPedal.Value = (m.Lsb > 63);
+					break;
+				}
+				break;
+			case SmfMessage.Meta:
+				switch (m.MetaType) {
+				case SmfMetaType.Tempo:
+					this.play_status_panel.Tempo = (int) ((60.0 / SmfMetaType.GetTempo (m.Data)) * 1000000.0);
 					break;
 				}
 				break;

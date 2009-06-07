@@ -26,6 +26,24 @@ namespace Commons.Music.Midi
 		public IList<SmfTrack> Tracks {
 			get { return tracks; }
 		}
+
+		public int GetTotalPlayTimeMilliseconds ()
+		{
+			if (Format != 0)
+				throw new NotSupportedException ("Format 1 is not suitable to compute total play time within a song");
+			if (DeltaTimeSpec < 0)
+				throw new NotSupportedException ("non-tick based DeltaTime");
+			else {
+				int tempo = SmfMetaType.DefaultTempo;
+				int v = 0;
+				foreach (var e in Tracks [0].Events) {
+					v += (int) (tempo / 1000 * e.DeltaTime / DeltaTimeSpec);
+					if (e.Message.MessageType == SmfMessage.Meta && e.Message.Msb == SmfMetaType.Tempo)
+						tempo = SmfMetaType.GetTempo (e.Message.Data);
+				}
+				return v;
+			}
+		}
 	}
 
 	public class SmfTrack
@@ -148,7 +166,7 @@ namespace Commons.Music.Midi
 		public const byte PolyModeOn = 0x7F;
 	}
 	
-	public static class SmfRpn
+	public static class SmfRpnType
 	{
 		public const short PitchBendSensitivity = 0;
 		public const short FineTuning = 1;
@@ -156,6 +174,32 @@ namespace Commons.Music.Midi
 		public const short TuningProgram = 3;
 		public const short TuningBankSelect = 4;
 		public const short ModulationDepth = 5;
+	}
+	
+	public static class SmfMetaType
+	{
+		public const byte SequenceNumber = 0x00;
+		public const byte Text = 0x01;
+		public const byte Copyright = 0x02;
+		public const byte TrackName = 0x03;
+		public const byte InstrumentName = 0x04;
+		public const byte Lyric = 0x05;
+		public const byte Marker = 0x06;
+		public const byte Cue = 0x07;
+		public const byte ChannelPrefix = 0x20;
+		public const byte EndOfTrack = 0x2F;
+		public const byte Tempo = 0x51;
+		public const byte SmpteOffset = 0x54;
+		public const byte TimeSignature = 0x58;
+		public const byte KeySignature = 0x59;
+		public const byte SequencerSpecific = 0x7F;
+
+		public const int DefaultTempo = 500000;
+		
+		public static int GetTempo (byte [] data)
+		{
+			return (data [0] << 16) + (data [1] << 8) + data [2];
+		}
 	}
 
 	public struct SmfMessage
@@ -561,6 +605,11 @@ namespace Commons.Music.Midi
 
 		SmfMusic source;
 
+		// FIXME: it should rather be implemented to iterate all
+		// tracks with index to events, pick the track which contains
+		// the nearest event and push the events into the merged queue.
+		// It's simpler, and costs less by removing sort operation
+		// over thousands of events.
 		SmfMusic GetMergedEvents ()
 		{
 			IList<SmfEvent> l = new List<SmfEvent> ();
