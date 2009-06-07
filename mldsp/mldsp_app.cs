@@ -43,6 +43,8 @@ namespace mldsp
 			p.PlayClicked += delegate { Play (); };
 			p.PauseClicked += delegate { Pause (); };
 			p.StopClicked += delegate { Stop (); };
+			p.FastForwardMouseDown += delegate { StartFF (); };
+			p.RewindMouseDown += delegate { StartRewind (); };
 			p.LoadClicked += delegate { SelectFile (); };
 			
 			Host.Children.Add (p);
@@ -149,7 +151,7 @@ namespace mldsp
 			player.StartLoop ();
 		}
 		
-		public void Pause ()
+		void Pause ()
 		{
 			if (player != null) {
 				player.PauseAsync ();
@@ -157,7 +159,7 @@ namespace mldsp
 			}
 		}
 
-		public void Stop ()
+		void Stop ()
 		{
 			if (player != null) {
 				player.Dispose ();
@@ -165,12 +167,22 @@ namespace mldsp
 			}
 		}
 
-		public void Play ()
+		void Play ()
 		{
 			if (player != null) {
 				player.PlayAsync ();
 				player_status_panel.State = PlayerState.Playing;
 			}
+		}
+
+		void StartFF ()
+		{
+			MessageBox.Show ("Oops, not supported");
+		}
+
+		void StartRewind ()
+		{
+			MessageBox.Show ("Oops, not supported");
 		}
 
 		static readonly int [] key_to_keyboard_idx = {0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6};

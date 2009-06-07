@@ -62,6 +62,8 @@ namespace mldsp
 			if (mouseDown != null)
 				l.Label.MouseLeftButtonDown += mouseDown;
 			l.Label.MouseLeftButtonUp += mouseUp;
+			l.Label.MouseEnter += delegate { l.Label.Opacity = 0.8; };
+			l.Label.MouseLeave += delegate { l.Label.Opacity = 1.0; };
 		}
 
 		public double FontSize {
