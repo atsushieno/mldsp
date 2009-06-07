@@ -19,6 +19,7 @@ namespace Commons.Music.Midi.Player
 		PlayerState State { get; }
 		int Tempo { get; }
 		int PlayDeltaTime { get; }
+		int GetTotalPlayTimeMilliseconds ();
 	}
 
 	// Player implementation. Plays a MIDI song synchronously.
@@ -45,6 +46,10 @@ namespace Commons.Music.Midi.Player
 		public int PlayDeltaTime { get; set; }
 		public int Tempo {
 			get { return current_tempo; }
+		}
+		public int GetTotalPlayTimeMilliseconds ()
+		{
+			return SmfMusic.GetTotalPlayTimeMilliseconds (events, music.DeltaTimeSpec);
 		}
 
 		public virtual void Dispose ()
@@ -176,6 +181,10 @@ namespace Commons.Music.Midi.Player
 		}
 		public int PlayDeltaTime {
 			get { return player.PlayDeltaTime; }
+		}
+		public int GetTotalPlayTimeMilliseconds ()
+		{
+			return player.GetTotalPlayTimeMilliseconds ();
 		}
 
 		public event MidiMessageAction MessageReceived {

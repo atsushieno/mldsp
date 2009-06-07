@@ -31,13 +31,18 @@ namespace Commons.Music.Midi
 		{
 			if (Format != 0)
 				throw new NotSupportedException ("Format 1 is not suitable to compute total play time within a song");
-			if (DeltaTimeSpec < 0)
+			return GetTotalPlayTimeMilliseconds (Tracks [0].Events, DeltaTimeSpec);
+		}
+		
+		public static int GetTotalPlayTimeMilliseconds (IList<SmfEvent> events, int deltaTimeSpec)
+		{
+			if (deltaTimeSpec < 0)
 				throw new NotSupportedException ("non-tick based DeltaTime");
 			else {
 				int tempo = SmfMetaType.DefaultTempo;
 				int v = 0;
-				foreach (var e in Tracks [0].Events) {
-					v += (int) (tempo / 1000 * e.DeltaTime / DeltaTimeSpec);
+				foreach (var e in events) {
+					v += (int) (tempo / 1000 * e.DeltaTime / deltaTimeSpec);
 					if (e.Message.MessageType == SmfMessage.Meta && e.Message.Msb == SmfMetaType.Tempo)
 						tempo = SmfMetaType.GetTempo (e.Message.Data);
 				}

@@ -11,7 +11,7 @@ namespace mldsp
 	{
 		public PlayStatusPanel ()
 		{
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 5; i++) {
 				var r = new Rectangle () { Width = 5, Height = 18 };
 				Canvas.SetTop (r, i * 22 + 6);
 				Canvas.SetLeft (r, 1);
@@ -20,30 +20,45 @@ namespace mldsp
 			}
 			AddText ("Passed", 8, 2, true);
 			AddText ("Time", 16, 12, true);
-			AddText ("Tick", 8, 24, true);
-			AddText ("Count", 12, 34, true);
-			AddText ("Tempo", 8, 46, true);
-			AddText ("Volume", 8, 68, true);
-			AddText ("Ratio", 12, 78, true);
+			AddText ("Total", 8, 24, true);
+			AddText ("Time", 16, 34, true);
+			AddText ("Tick", 8, 46, true);
+			AddText ("Count", 12, 56, true);
+			AddText ("Tempo", 8, 68, true);
+			AddText ("Volume", 8, 90, true);
+			AddText ("Ratio", 12, 100, true);
 
 			AddText ("00:00:00", 60, 2, false);
 			passed_time = last;
-			AddText ("00000000", 60, 24, false);
-			tick_count = last;
+			AddText ("00:00:00", 60, 24, false);
+			total_time = last;
 			AddText ("00000000", 60, 46, false);
+			tick_count = last;
+			tick_count.Tag = 0;
+			AddText ("00000000", 60, 68, false);
 			tempo = last;
 			tempo.Tag = 0;
-			AddText ("100%", 60, 68, false);
+			AddText ("100%", 60, 90, false);
 			volume_ratio = last;
 			volume_ratio.Tag = 0;
 			last = null;
 		}
 
 		TextBlock passed_time;
+		TextBlock total_time;
 		TextBlock tick_count;
 		TextBlock tempo;
 		TextBlock volume_ratio;
 
+		public int TotalTime {
+			get { return (int) total_time.Tag; }
+			set {
+				total_time.Tag = value;
+				TimeSpan ts = TimeSpan.FromMilliseconds (value);
+				total_time.Text = String.Format ("{0:D02}:{1:D02}:{2:D03}", (int) ts.TotalMinutes, (int) ts.Seconds, (int) ts.Milliseconds);
+			}
+		}
+		
 		public int Tempo {
 			get { return (int) tempo.Tag; }
 			set {

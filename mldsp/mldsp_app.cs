@@ -128,6 +128,7 @@ namespace mldsp
 				disp.BeginInvoke (() => HandleSmfMessage (m));
 			};
 
+			play_status_panel.TotalTime = player.GetTotalPlayTimeMilliseconds ();
 			player.StartLoop ();
 			player.PlayAsync ();
 		}
