@@ -28,10 +28,23 @@ namespace mldsp
 		{
 			AddFileSelectionTextBoxHack ();
 			AddParameterVisualizer ();
-			AddPlayStatusPanel ();
+			AddPlayerStatusPanel ();
+			AddPlayTimeStatusPanel ();
 		}
 
-		void AddPlayStatusPanel ()
+		void AddPlayerStatusPanel ()
+		{
+			var p = new PlayerStatusPanel ();
+			p.FontSize = 10;
+			p.InactiveBrush = new SolidColorBrush (color_dark);
+			p.ActiveBrush = new SolidColorBrush (color_ch_colored);
+			Canvas.SetLeft (p, 400);
+			Canvas.SetTop (p, 50);
+			Host.Children.Add (p);
+			player_status_panel = p;
+		}
+
+		void AddPlayTimeStatusPanel ()
 		{
 			var p = new PlayTimeStatusPanel ();
 			p.LabelFontSize = 10;
@@ -43,6 +56,7 @@ namespace mldsp
 			play_time_status_panel = p;
 		}
 
+		PlayerStatusPanel player_status_panel;
 		PlayTimeStatusPanel play_time_status_panel;
 		public ParameterVisualizerPanel [] ParameterVisualizers { get; private set; }
 
@@ -131,6 +145,7 @@ namespace mldsp
 			play_time_status_panel.TotalTime = player.GetTotalPlayTimeMilliseconds ();
 			player.StartLoop ();
 			player.PlayAsync ();
+			player_status_panel.State = player.State;
 		}
 
 		static readonly int [] key_to_keyboard_idx = {0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6};

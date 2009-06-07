@@ -11,7 +11,10 @@ namespace Commons.Music.Midi.Player
 	{
 		Stopped,
 		Playing,
-		Paused
+		Paused,
+		FastForward,
+		Rewind,
+		Loading
 	}
 
 	public interface IMidiPlayerStatus

@@ -97,8 +97,6 @@ public static void setupPlayInfoSection ()
 {
 setupTitleArea ();
 setupDriverInfo ();
-setupPlayStatus ();
-//setupSongStatus ();
 }
 public static void setupTitleArea ()
 {
@@ -125,50 +123,6 @@ ProcessingApplication.Current.@text (@"SMF plugin", 50, text_height * 4);
 ProcessingApplication.Current.@text (@"0.01", 100, text_height * 4);
 ProcessingApplication.Current.@text (@"(C)2009 atsushieno", 130, text_height * 4);
 }
-public static void setupPlayStatus ()
-{
-ProcessingApplication.Current.@stroke (color_ch_hidden);
-ProcessingApplication.Current.@fill (color_background);
-ProcessingApplication.Current.@rect (40, text_height * 9, 150, text_height);
-ProcessingApplication.Current.@rect (190, text_height * 9, 20, text_height);
-ProcessingApplication.Current.@textFont (font8);
-ProcessingApplication.Current.@fill (color_ch_text_colored);
-ProcessingApplication.Current.@text (@"[>PLAY", 40, text_height * 11);
-ProcessingApplication.Current.@fill (color_ch_text_hidden);
-ProcessingApplication.Current.@text (@"||PAUSE", 80, text_height * 11);
-ProcessingApplication.Current.@text (@"[]STOP", 120, text_height * 11);
-ProcessingApplication.Current.@text (@"\\\\FADE", 160, text_height * 11);
-ProcessingApplication.Current.@text (@">>FF", 40, text_height * 12);
-ProcessingApplication.Current.@text (@"<<REW", 80, text_height * 12);
-ProcessingApplication.Current.@text (@"<]LOAD", 120, text_height * 12);
-}
-		/*
-public static void setupSongStatus ()
-{
-ProcessingApplication.Current.@fill (color_ch_colored);
-ProcessingApplication.Current.@rect (230, text_height * 5, 4, text_height * 2);
-ProcessingApplication.Current.@text (@"PASSED", 240, text_height * 6);
-ProcessingApplication.Current.@text (@"    TIME", 240, text_height * 7);
-ProcessingApplication.Current.@rect (230, text_height * 8, 4, text_height * 2);
-ProcessingApplication.Current.@text (@"TICK", 240, text_height * 9);
-ProcessingApplication.Current.@text (@"   COUNT", 240, text_height * 10);
-ProcessingApplication.Current.@rect (230, text_height * 11, 4, text_height * 2);
-ProcessingApplication.Current.@text (@"TIMER", 240, text_height * 12);
-ProcessingApplication.Current.@text (@"   CYCLE", 240, text_height * 13);
-ProcessingApplication.Current.@rect (230, text_height * 14, 4, text_height * 2);
-ProcessingApplication.Current.@text (@"LOOP", 240, text_height * 15);
-ProcessingApplication.Current.@text (@"   COUNT", 240, text_height * 16);
-ProcessingApplication.Current.@rect (230, text_height * 17, 4, text_height * 2);
-ProcessingApplication.Current.@text (@"VOLUME", 240, text_height * 18);
-ProcessingApplication.Current.@text (@"   RATIO", 240, text_height * 19);
-ProcessingApplication.Current.@textFont (font16);
-ProcessingApplication.Current.@text (@"00:00:00", 300, text_height * 7);
-ProcessingApplication.Current.@text (@"00000000", 300, text_height * 10);
-ProcessingApplication.Current.@text (@"00000200", 300, text_height * 13);
-ProcessingApplication.Current.@text (@"00000000", 300, text_height * 16);
-ProcessingApplication.Current.@text (@"100%", 300, text_height * 19);
-}
-		*/
 public static void setupChannelInfo (int channel)
 {
 double yText1 = getChannelYPos (channel) + text_height;
