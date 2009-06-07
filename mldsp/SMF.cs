@@ -89,40 +89,22 @@ namespace Commons.Music.Midi
 		public const byte General2 = 0x11;
 		public const byte General3 = 0x12;
 		public const byte General4 = 0x13;
-		/*
-		public const byte BankSelect = 0x20;
-		public const byte Modulation = 0x21;
-		public const byte BankSelect = 0x22;
-		public const byte BankSelect = 0x23;
-		public const byte BankSelect = 0x24;
-		public const byte BankSelect = 0x25;
-		public const byte BankSelect = 0x26;
-		public const byte BankSelect = 0x27;
-		public const byte BankSelect = 0x28;
-		public const byte BankSelect = 0x29;
-		public const byte BankSelect = 0x2A;
-		public const byte BankSelect = 0x2B;
-		public const byte BankSelect = 0x2C;
-		public const byte BankSelect = 0x2D;
-		public const byte BankSelect = 0x2E;
-		public const byte BankSelect = 0x2F;
-		public const byte BankSelect = 0x30;
-		public const byte Modulation = 0x31;
-		public const byte BankSelect = 0x32;
-		public const byte BankSelect = 0x33;
-		public const byte BankSelect = 0x34;
-		public const byte BankSelect = 0x35;
-		public const byte BankSelect = 0x36;
-		public const byte BankSelect = 0x37;
-		public const byte BankSelect = 0x38;
-		public const byte BankSelect = 0x39;
-		public const byte BankSelect = 0x3A;
-		public const byte BankSelect = 0x3B;
-		public const byte BankSelect = 0x3C;
-		public const byte BankSelect = 0x3D;
-		public const byte BankSelect = 0x3E;
-		public const byte BankSelect = 0x3F;
-		*/
+		public const byte BankSelectLsb = 0x20;
+		public const byte ModulationLsb = 0x21;
+		public const byte BreathLsb = 0x22;
+		public const byte FootLsb = 0x24;
+		public const byte PortamentTimeLsb = 0x25;
+		public const byte DteLsb = 0x26;
+		public const byte VolumeLsb = 0x27;
+		public const byte BalanceLsb = 0x28;
+		public const byte PanLsb = 0x2A;
+		public const byte ExpressionLsb = 0x2B;
+		public const byte Effect1Lsb = 0x2C;
+		public const byte Effect2Lsb = 0x2D;
+		public const byte General1Lsb = 0x30;
+		public const byte General2Lsb = 0x31;
+		public const byte General3Lsb = 0x32;
+		public const byte General4Lsb = 0x33;
 		public const byte Hold = 0x40;
 		public const byte PortamentoSwitch = 0x41;
 		public const byte Sostenuto = 0x42;
@@ -164,6 +146,16 @@ namespace Commons.Music.Midi
 		public const byte OmniModeOn = 0x7D;
 		public const byte PolyModeOnOff = 0x7E;
 		public const byte PolyModeOn = 0x7F;
+	}
+	
+	public static class SmfRpn
+	{
+		public const short PitchBendSensitivity = 0;
+		public const short FineTuning = 1;
+		public const short CoarseTuning = 2;
+		public const short TuningProgram = 3;
+		public const short TuningBankSelect = 4;
+		public const short ModulationDepth = 5;
 	}
 
 	public struct SmfMessage
