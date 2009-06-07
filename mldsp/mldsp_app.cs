@@ -28,8 +28,20 @@ namespace mldsp
 		{
 			AddFileSelectionTextBoxHack ();
 			AddParameterVisualizer ();
+			AddPlayStatusPanel ();
 		}
-		
+
+		void AddPlayStatusPanel ()
+		{
+			var p = new PlayStatusPanel ();
+			p.LabelFontSize = 10;
+			p.ValueFontSize = 16;
+			p.Brush = new SolidColorBrush (color_usual);
+			Canvas.SetLeft (p, 600);
+			Canvas.SetTop (p, 50);
+			Host.Children.Add (p);
+		}
+
 		public ParameterVisualizerPanel [] ParameterVisualizers { get; private set; }
 
 		void AddParameterVisualizer ()
@@ -39,7 +51,7 @@ namespace mldsp
 				var p = new ParameterVisualizerPanel ();
 				p.Location = new Point (80, i * 32);
 				p.FontSize = 7;
-				p.Foreground = new SolidColorBrush (Color.FromArgb (255, 192, 192, 255));
+				p.Foreground = new SolidColorBrush (Color.FromArgb (255, 96, 160, 255));
 				ParameterVisualizers [i] = p;
 				Host.Children.Add (p);
 			}

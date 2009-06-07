@@ -98,7 +98,7 @@ public static void setupPlayInfoSection ()
 setupTitleArea ();
 setupDriverInfo ();
 setupPlayStatus ();
-setupSongStatus ();
+//setupSongStatus ();
 }
 public static void setupTitleArea ()
 {
@@ -142,6 +142,7 @@ ProcessingApplication.Current.@text (@">>FF", 40, text_height * 12);
 ProcessingApplication.Current.@text (@"<<REW", 80, text_height * 12);
 ProcessingApplication.Current.@text (@"<]LOAD", 120, text_height * 12);
 }
+		/*
 public static void setupSongStatus ()
 {
 ProcessingApplication.Current.@fill (color_ch_colored);
@@ -167,6 +168,7 @@ ProcessingApplication.Current.@text (@"00000200", 300, text_height * 13);
 ProcessingApplication.Current.@text (@"00000000", 300, text_height * 16);
 ProcessingApplication.Current.@text (@"100%", 300, text_height * 19);
 }
+		*/
 public static void setupChannelInfo (int channel)
 {
 double yText1 = getChannelYPos (channel) + text_height;
@@ -180,20 +182,11 @@ ProcessingApplication.Current.@fill (color_ch_text_colored);
 ProcessingApplication.Current.@text (ch_types [channel], 0, yText1);
 ProcessingApplication.Current.@fill (color_ch_text_base);
 ProcessingApplication.Current.@text (@"TRACK.", 0, yText2);
-//ProcessingApplication.Current.@fill (color_ch_colored);
-//ProcessingApplication.Current.@rect (80, getChannelYPos (channel), 20, text_height);
-//ProcessingApplication.Current.@fill (color_ch_colored);
-//ProcessingApplication.Current.@rect (100, getChannelYPos (channel), 6 * 16 - channel, text_height);
 ProcessingApplication.Current.@stroke (color_ch_colored);
 ProcessingApplication.Current.@line (340, getChannelYPos (channel) + 2, 360, getChannelYPos (channel) + text_height - 2);
 ProcessingApplication.Current.@fill (color_ch_text_colored);
 ProcessingApplication.Current.@text (ProcessingApplication.Current.@nf (1000, 5), 364, getChannelYPos (channel) + text_height);
 ProcessingApplication.Current.@fill (color_ch_text_base);
-//ProcessingApplication.Current.@text (@"KN:o" + ProcessingApplication.Current.@nf (5, 1) + @"c", 80, yText2);
-//ProcessingApplication.Current.@text (@"TN:" + ProcessingApplication.Current.@nf (1, 3) + "/" + ProcessingApplication.Current.@nf (0, 3), 130, yText2);
-//ProcessingApplication.Current.@text ("VEL:\u25B2" + ProcessingApplication.Current.@nf (110, 3), 200, yText2);
-//ProcessingApplication.Current.@text ("EXP:\u25BC" + ProcessingApplication.Current.@nf (8, 3), 250, yText2);
-//ProcessingApplication.Current.@text (@"DT:" + ProcessingApplication.Current.@nf (8 * -1, 3), 300, yText2);
 ProcessingApplication.Current.@text (@"M:--------", 340, yText2);
 }
 public static void setupKeyboard (int channel)
