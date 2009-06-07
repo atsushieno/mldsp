@@ -26,6 +26,11 @@ namespace mldsp
 
 		protected override void OnApplicationSetup ()
 		{
+#if !Moonlight
+			if (output == null)
+				output = MidiDeviceManager.OpenOutput (OutputDeviceID ?? MidiDeviceManager.DefaultOutputDeviceID);
+			Console.WriteLine ("Opened Device " + OutputDeviceID);
+#endif
 			AddParameterVisualizer ();
 			AddPlayerStatusPanel ();
 			AddPlayTimeStatusPanel ();
@@ -114,11 +119,6 @@ namespace mldsp
 		public void LoadFile (FileInfo filename, Stream stream)
 		{
 			Stop ();
-#if !Moonlight
-			if (output == null)
-				output = MidiDeviceManager.OpenOutput (OutputDeviceID ?? MidiDeviceManager.DefaultOutputDeviceID);
-			Console.WriteLine ("Opened Device " + OutputDeviceID);
-#endif
 			var reader = new SmfReader (stream);
 			reader.Parse ();
 			Music = reader.Music;
@@ -137,6 +137,7 @@ namespace mldsp
 
 			play_time_status_panel.TotalTime = player.GetTotalPlayTimeMilliseconds ();
 			player.StartLoop ();
+			Console.WriteLine ("Player loop started");
 		}
 		
 		void Pause ()

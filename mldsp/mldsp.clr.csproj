@@ -50,6 +50,9 @@
     <Compile Include="App.xaml.cs" />
     <Compile Include="PortMidiSharp.cs" />
     <Compile Include="MidiMachine.cs" />
+    <Compile Include="mldsp_playerstatuspanel.cs" />
+    <Compile Include="mldsp_playtimestatuspanel.cs" />
+    <Compile Include="mldsp_visualitem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

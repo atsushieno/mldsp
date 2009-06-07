@@ -18,14 +18,9 @@ namespace Commons.Music.Midi.Player
 			MessageReceived += delegate (SmfMessage m) { SendMidiMessage (m); };
 		}
 
+		// it should not be disposed here. The module that
+		// created this object should dispose it instead.
 		MidiOutput output;
-
-		public override void Dispose ()
-		{
-			base.Dispose ();
-			if (output != null)
-				output.Dispose ();
-		}
 
 		void SendMidiMessage (SmfMessage m)
 		{
