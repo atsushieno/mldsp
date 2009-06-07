@@ -49,7 +49,7 @@ namespace mldsp
 			set {
 				total_time.Tag = value;
 				TimeSpan ts = TimeSpan.FromMilliseconds (value);
-				total_time.Text = String.Format ("{0:D02}:{1:D02}:{2:D03}", (int) ts.TotalMinutes, (int) ts.Seconds, (int) ts.Milliseconds);
+				total_time.Text = String.Format ("{0:D02}:{1:D02}.{2:D03}", (int) ts.TotalMinutes, (int) ts.Seconds, (int) ts.Milliseconds);
 			}
 		}
 		
