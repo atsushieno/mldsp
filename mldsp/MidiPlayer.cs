@@ -38,6 +38,8 @@ namespace Commons.Music.Midi.Player
 			state = PlayerState.Stopped;
 		}
 
+		public event Action Finished;
+
 		SmfMusic music;
 		IList<SmfEvent> events;
 		ManualResetEvent pause_handle = new ManualResetEvent (false);
@@ -110,6 +112,9 @@ namespace Commons.Music.Midi.Player
 				do_stop = false;
 				Mute ();
 				state = PlayerState.Stopped;
+				if (event_idx == events.Count)
+					if (Finished != null)
+						Finished ();
 				event_idx = 0;
 			}
 		}
@@ -172,6 +177,11 @@ namespace Commons.Music.Midi.Player
 		public MidiPlayer (SmfMusic music)
 		{
 			player = new MidiSyncPlayer (music);
+		}
+
+		public event Action Finished {
+			add { player.Finished += value; }
+			remove { player.Finished -= value; }
 		}
 
 		public PlayerState State {

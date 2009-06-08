@@ -4,10 +4,12 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using Commons.Music.Midi.Player;
 
 namespace mldsp
 {
-	public class PlayTimeStatusPanel : Canvas
+	public class PlayTimeStatusPanel : Canvas, IPlayerStatusView
 	{
 		public PlayTimeStatusPanel ()
 		{
@@ -35,7 +37,6 @@ namespace mldsp
 			tick_count.Tag = 0;
 			AddText ("00000000", 60, 72, false);
 			tempo = last;
-			tempo.Tag = 0;
 			last = null;
 		}
 
@@ -53,10 +54,11 @@ namespace mldsp
 			}
 		}
 		
-		public int Tempo {
-			get { return (int) tempo.Tag; }
+		public int Bpm {
+			get { return current_bpm; }
 			set {
-				tempo.Tag = value;
+				current_bpm = value;
+				last_tempo_changed = DateTime.Now;
 				tempo.Text = value.ToString ("D08");
 			}
 		}
@@ -105,6 +107,48 @@ namespace mldsp
 			else
 				values.Add (tb);
 			last = tb;
+		}
+
+		DispatcherTimer timer;
+		DateTime timer_resumed;
+		TimeSpan timer_offset;
+		DateTime last_tempo_changed;
+		int current_bpm, tick_offset;
+
+		public void ProcessBeginPlay (MidiPlayer player, int totalMilliseconds)
+		{
+			timer = new DispatcherTimer ();
+			timer.Interval = TimeSpan.FromMilliseconds (50);
+			timer.Tick += delegate {
+				tick_count.Text = player.PlayDeltaTime.ToString ("D08");
+				TimeSpan now = DateTime.Now - timer_resumed + timer_offset;
+				passed_time.Text = String.Format ("{0:D02}:{1:D02}.{2:D03}", (int) now.TotalMinutes, now.Seconds, now.Milliseconds);
+			};
+			timer_offset = TimeSpan.Zero;
+			last_tempo_changed = timer_resumed = DateTime.Now;
+			tick_offset = 0;
+			timer.Start ();
+		}
+		
+		public void ProcessSkip (int seekMilliseconds)
+		{
+		}
+
+		public void ProcessPause ()
+		{
+			timer_offset += DateTime.Now - timer_resumed;
+			timer.Stop ();
+		}
+
+		public void ProcessStop ()
+		{
+			timer.Stop ();
+		}
+
+		public void ProcessResume ()
+		{
+			timer_resumed = DateTime.Now;
+			timer.Start ();
 		}
 	}
 }

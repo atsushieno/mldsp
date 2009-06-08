@@ -57,6 +57,7 @@ namespace mldsp
 			
 			Host.Children.Add (p);
 			player_status_panel = p;
+			player_status_views.Add (p);
 		}
 
 		void AddPlayTimeStatusPanel ()
@@ -69,6 +70,7 @@ namespace mldsp
 			Canvas.SetTop (p, 50);
 			Host.Children.Add (p);
 			play_time_status_panel = p;
+			player_status_views.Add (p);
 		}
 
 		void AddParameterVisualizer ()
@@ -88,6 +90,7 @@ namespace mldsp
 		MidiOutput output;
 		MidiPlayer player;
 		MidiMachine registers;
+		List<IPlayerStatusView> player_status_views = new List<IPlayerStatusView> ();
 
 		void SelectFile ()
 		{
@@ -127,6 +130,7 @@ namespace mldsp
 #else
 			player = new PortMidiPlayer (output, Music);
 #endif
+			player.Finished += delegate { disp.BeginInvoke (() => StopViews ()); };
 			registers = new MidiMachine ();
 			player.MessageReceived += delegate (SmfMessage m) {
 				registers.ProcessMessage (m);
@@ -144,7 +148,8 @@ namespace mldsp
 		{
 			if (player != null) {
 				player.PauseAsync ();
-				player_status_panel.State = PlayerState.Paused;
+				foreach (var view in player_status_views)
+					view.ProcessPause ();
 			}
 		}
 
@@ -152,15 +157,30 @@ namespace mldsp
 		{
 			if (player != null) {
 				player.Dispose ();
-				player_status_panel.State = PlayerState.Stopped;
+				StopViews ();
 			}
+		}
+
+		void StopViews ()
+		{
+			foreach (var view in player_status_views)
+				view.ProcessStop ();
 		}
 
 		void Play ()
 		{
 			if (player != null) {
+				switch (player.State) {
+				case PlayerState.Paused:
+					foreach (var view in player_status_views)
+						view.ProcessResume ();
+					break;
+				case PlayerState.Stopped:
+					foreach (var view in player_status_views)
+						view.ProcessBeginPlay (player, play_time_status_panel.TotalTime);
+					break;
+				}
 				player.PlayAsync ();
-				player_status_panel.State = PlayerState.Playing;
 			}
 		}
 
@@ -255,11 +275,20 @@ namespace mldsp
 			case SmfMessage.Meta:
 				switch (m.MetaType) {
 				case SmfMetaType.Tempo:
-					this.play_time_status_panel.Tempo = (int) ((60.0 / SmfMetaType.GetTempo (m.Data)) * 1000000.0);
+					this.play_time_status_panel.Bpm = (int) ((60.0 / SmfMetaType.GetTempo (m.Data)) * 1000000.0);
 					break;
 				}
 				break;
 			}
 		}
+	}
+
+	public interface IPlayerStatusView
+	{
+		void ProcessBeginPlay (MidiPlayer player, int totalMilliseconds);
+		void ProcessSkip (int seekMilliseconds);
+		void ProcessPause ();
+		void ProcessStop ();
+		void ProcessResume ();
 	}
 }
