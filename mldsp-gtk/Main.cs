@@ -16,8 +16,8 @@ namespace mldspgtk
 			//win.Show ();
 			MoonlightRuntime.Init ();
 			Window w = new Window ("mldsp");
-			w.DefaultHeight = 600;
-			w.DefaultWidth = 800;
+			w.DefaultHeight = 520;
+			w.DefaultWidth = 720;
 			w.DeleteEvent += delegate { Application.Quit (); };
 			var moon = new MoonlightHost ();
 			moon.LoadXap ("mldsp.clr.xap");
