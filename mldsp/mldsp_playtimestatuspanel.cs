@@ -114,6 +114,12 @@ namespace mldsp
 		TimeSpan timer_offset;
 		DateTime last_tempo_changed;
 		int current_bpm, tick_offset;
+		double tempo_ratio = 1.0;
+
+		TimeSpan GetTimerOffsetWithTempoRatio ()
+		{
+			return TimeSpan.FromMilliseconds ((DateTime.Now - timer_resumed).TotalMilliseconds * tempo_ratio);
+		}
 
 		public void ProcessBeginPlay (MidiPlayer player, int totalMilliseconds)
 		{
@@ -121,7 +127,7 @@ namespace mldsp
 			timer.Interval = TimeSpan.FromMilliseconds (50);
 			timer.Tick += delegate {
 				tick_count.Text = player.PlayDeltaTime.ToString ("D08");
-				TimeSpan now = DateTime.Now - timer_resumed + timer_offset;
+				TimeSpan now = GetTimerOffsetWithTempoRatio () + timer_offset;
 				passed_time.Text = String.Format ("{0:D02}:{1:D02}.{2:D03}", (int) now.TotalMinutes, now.Seconds, now.Milliseconds);
 			};
 			timer_offset = TimeSpan.Zero;
@@ -149,6 +155,13 @@ namespace mldsp
 		{
 			timer_resumed = DateTime.Now;
 			timer.Start ();
+		}
+
+		public void ProcessChangeTempoRatio (double ratio)
+		{
+			timer_offset += GetTimerOffsetWithTempoRatio ();
+			timer_resumed = DateTime.Now;
+			tempo_ratio = ratio;
 		}
 	}
 }

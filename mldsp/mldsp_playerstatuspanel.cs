@@ -120,7 +120,10 @@ namespace mldsp
 
 		public void ProcessBeginPlay (MidiPlayer player, int totalMilliseconds)
 		{
-			progress_story.Children [0].Duration = new Duration (TimeSpan.FromMilliseconds (totalMilliseconds));
+			progress_story.Stop ();
+			var a = (DoubleAnimation) progress_story.Children [0];
+			a.Duration = new Duration (TimeSpan.FromMilliseconds (totalMilliseconds));
+			a.From = 0;
 			progress_story.Begin ();
 			State = PlayerState.Playing;
 		}
@@ -146,6 +149,20 @@ namespace mldsp
 		{
 			progress_story.Resume ();
 			State = PlayerState.Playing;
+		}
+
+		TimeSpan adjustation = TimeSpan.Zero;
+		public void ProcessChangeTempoRatio (double ratio)
+		{
+			var cur = progress_story.GetCurrentTime ();
+			double start = progress.Width;
+			progress_story.Stop ();
+			var a = (DoubleAnimation) progress_story.Children [0];
+			a.From = start;
+			a.Duration = TimeSpan.FromMilliseconds ((a.Duration.TimeSpan - cur).TotalMilliseconds);
+			a.SpeedRatio = ratio;
+			adjustation = cur;
+			progress_story.Begin ();
 		}
 	}
 	

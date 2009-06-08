@@ -53,6 +53,10 @@ namespace Commons.Music.Midi.Player
 		public int Tempo {
 			get { return current_tempo; }
 		}
+		public void SetTempoRatio (double ratio)
+		{
+			tempo_ratio = ratio;
+		}
 		public int GetTotalPlayTimeMilliseconds ()
 		{
 			return SmfMusic.GetTotalPlayTimeMilliseconds (events, music.DeltaTimeSpec);
@@ -120,7 +124,7 @@ namespace Commons.Music.Midi.Player
 		}
 
 		int current_tempo = SmfMetaType.DefaultTempo; // dummy
-		int tempo_ratio = 1;
+		double tempo_ratio = 1.0;
 
 		int GetDeltaTimeInMilliseconds (int deltaTime)
 		{
@@ -191,9 +195,16 @@ namespace Commons.Music.Midi.Player
 		public int Tempo {
 			get { return player.Tempo; }
 		}
+
+		public void SetTempoRatio (double value)
+		{
+			player.SetTempoRatio (value);
+		}
+
 		public int PlayDeltaTime {
 			get { return player.PlayDeltaTime; }
 		}
+
 		public int GetTotalPlayTimeMilliseconds ()
 		{
 			return player.GetTotalPlayTimeMilliseconds ();

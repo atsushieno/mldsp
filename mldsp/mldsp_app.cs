@@ -52,6 +52,7 @@ namespace mldsp
 			p.PauseClicked += delegate { Pause (); };
 			p.StopClicked += delegate { Stop (); };
 			p.FastForwardMouseDown += delegate { StartFF (); };
+			p.FastForwardMouseUp += delegate { EndFF (); };
 			p.RewindMouseDown += delegate { StartRewind (); };
 			p.LoadClicked += delegate { SelectFile (); };
 			
@@ -186,7 +187,20 @@ namespace mldsp
 
 		void StartFF ()
 		{
-			MessageBox.Show ("Oops, not supported");
+			if (player != null) {
+				player.SetTempoRatio (2.0);
+				foreach (var view in player_status_views)
+					view.ProcessChangeTempoRatio (2.0);
+			}
+		}
+
+		void EndFF ()
+		{
+			if (player != null) {
+				player.SetTempoRatio (1.0);
+				foreach (var view in player_status_views)
+					view.ProcessChangeTempoRatio (1.0);
+			}
 		}
 
 		void StartRewind ()
@@ -290,5 +304,6 @@ namespace mldsp
 		void ProcessPause ();
 		void ProcessStop ();
 		void ProcessResume ();
+		void ProcessChangeTempoRatio (double ratio);
 	}
 }
