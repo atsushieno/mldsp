@@ -47,6 +47,7 @@ namespace mldsp
 		{
 			keyon_meter_panel = new KeyonMeterPanel ();
 			keyon_meter_panel.Stroke = new SolidColorBrush (color_dark);
+			keyon_meter_panel.Fill = new SolidColorBrush (color_ch_colored);
 			Canvas.SetLeft (keyon_meter_panel, 400);
 			Canvas.SetTop (keyon_meter_panel, 300);
 			Host.Children.Add (keyon_meter_panel);
@@ -249,6 +250,7 @@ namespace mldsp
 				if (note < 0)
 					break; // out of range
 				key_rectangles [m.Channel, note].Fill = new SolidColorBrush (color_keyon);
+				keyon_meter_panel.ProcessKeyOn (m.Channel, m.Lsb);
 				break;
 			case SmfMessage.NoteOff:
 				note = GetKeyIndexForNote (m.Msb);
