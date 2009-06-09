@@ -28,6 +28,7 @@ namespace mldsp
 		PlayerStatusPanel player_status_panel;
 		PlayTimeStatusPanel play_time_status_panel;
 		ParameterVisualizerPanel [] parameter_visualizers;
+		KeyonMeterPanel keyon_meter_panel;
 
 		protected override void OnApplicationSetup ()
 		{
@@ -39,8 +40,18 @@ namespace mldsp
 			AddParameterVisualizer ();
 			AddPlayerStatusPanel ();
 			AddPlayTimeStatusPanel ();
+			AddKeyonMeterPanel ();
 		}
 
+		void AddKeyonMeterPanel ()	
+		{
+			keyon_meter_panel = new KeyonMeterPanel ();
+			keyon_meter_panel.Stroke = new SolidColorBrush (color_dark);
+			Canvas.SetLeft (keyon_meter_panel, 400);
+			Canvas.SetTop (keyon_meter_panel, 300);
+			Host.Children.Add (keyon_meter_panel);
+		}
+		
 		void AddPlayerStatusPanel ()
 		{
 			var p = new PlayerStatusPanel ();
@@ -249,6 +260,9 @@ namespace mldsp
 				break;
 			case SmfMessage.CC:
 				switch (m.Msb) {
+				case SmfCC.Pan:
+					keyon_meter_panel.SetPan (m.Channel, m.Lsb);
+					break;
 				case SmfCC.Volume:
 					parameter_visualizers [m.Channel].Volume.SetValue (m.Lsb);
 					break;

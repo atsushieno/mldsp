@@ -34,6 +34,11 @@ namespace mldsp
 			Storyboard.SetTarget (progress_story, progress);
 			Storyboard.SetTargetProperty (progress_story, new PropertyPath ("Width"));
 			progress_story.Children.Add (new DoubleAnimation () { From = 0, To = 140 });
+
+			Children.Add (progress_slot);
+			Children.Add (progress);
+
+			// play status/controller items
 			AddText (PlayerState.Playing, "Play", 50, 20, null,
 			         delegate (object o, MouseButtonEventArgs a) { if (PlayClicked != null) PlayClicked (o, a); });
 			AddText (PlayerState.Paused, "Pause", 90, 20, null,
@@ -48,6 +53,13 @@ namespace mldsp
 			         delegate (object o, MouseButtonEventArgs a) { if (RewindMouseUp != null) RewindMouseUp (o, a); });
 			AddText (PlayerState.Loading, "Load", 130, 34, null,
 			         delegate (object o, MouseButtonEventArgs a) { if (LoadClicked != null) LoadClicked (o, a); });
+
+			// FIXME: add path figures for each items (PathFigureCollection.Parse() would be useful,
+			// but it does not exist in Moonlight yet ...)
+			foreach (var item in items)
+				Children.Add (item.Label);
+
+			// circle meter
 			for (int i = 0; i < circle_lines.Length; i++) {
 				var l = new Line () { X1 = 16, Y1 = 36,
 					X2 = 16 + 16 * Math.Cos (Math.PI * i / circle_lines.Length * 2),
@@ -62,11 +74,6 @@ namespace mldsp
 			Canvas.SetLeft (el, 16 - el.Height / 2);
 			el.Fill = new SolidColorBrush (App.color_background);
 
-			Children.Add (progress_slot);
-			Children.Add (progress);
-			foreach (var item in items)
-				// FIXME: add item icon too
-				Children.Add (item.Label);
 			foreach (var l in circle_lines)
 				Children.Add (l);
 			Children.Add (el);
