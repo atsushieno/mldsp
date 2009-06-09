@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -289,7 +290,8 @@ namespace mldsp
 			case SmfMessage.Meta:
 				switch (m.MetaType) {
 				case SmfMetaType.Tempo:
-					this.play_time_status_panel.Bpm = (int) ((60.0 / SmfMetaType.GetTempo (m.Data)) * 1000000.0);
+					foreach (var view in player_status_views)
+						view.ProcessChangeTempo ((int) ((60.0 / SmfMetaType.GetTempo (m.Data)) * 1000000.0));
 					break;
 				}
 				break;
@@ -304,6 +306,7 @@ namespace mldsp
 		void ProcessPause ();
 		void ProcessStop ();
 		void ProcessResume ();
+		void ProcessChangeTempo (int bpm);
 		void ProcessChangeTempoRatio (double ratio);
 	}
 }

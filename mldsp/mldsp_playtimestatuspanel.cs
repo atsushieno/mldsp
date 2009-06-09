@@ -124,7 +124,7 @@ namespace mldsp
 		public void ProcessBeginPlay (MidiPlayer player, int totalMilliseconds)
 		{
 			timer = new DispatcherTimer ();
-			timer.Interval = TimeSpan.FromMilliseconds (50);
+			timer.Interval = TimeSpan.FromMilliseconds (75);
 			timer.Tick += delegate {
 				tick_count.Text = player.PlayDeltaTime.ToString ("D08");
 				TimeSpan now = GetTimerOffsetWithTempoRatio () + timer_offset;
@@ -155,6 +155,11 @@ namespace mldsp
 		{
 			timer_resumed = DateTime.Now;
 			timer.Start ();
+		}
+
+		public void ProcessChangeTempo (int bpm)
+		{
+			Bpm = bpm;
 		}
 
 		public void ProcessChangeTempoRatio (double ratio)
