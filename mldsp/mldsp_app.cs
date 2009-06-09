@@ -177,6 +177,12 @@ namespace mldsp
 
 		void StopViews ()
 		{
+			var wb = new SolidColorBrush (color_white_key);
+			var bb = new SolidColorBrush (color_black_key);
+			for (int ch = 0; ch < 16; ch++)
+				for (int i = 0; i < 128 - 24; i++)
+					if (key_rectangles [ch, i] != null) // FIXME: find out why some of them are null.
+						key_rectangles [ch, i].Fill = IsWhiteKey (i) ? wb : bb;
 			foreach (var view in player_status_views)
 				view.ProcessStop ();
 		}
