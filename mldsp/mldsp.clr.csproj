@@ -53,6 +53,7 @@
     <Compile Include="mldsp_playerstatuspanel.cs" />
     <Compile Include="mldsp_playtimestatuspanel.cs" />
     <Compile Include="mldsp_visualitem.cs" />
+    <Compile Include="mldsp_keyonmeterpanel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
