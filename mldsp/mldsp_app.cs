@@ -30,8 +30,18 @@ namespace mldsp
 		ParameterVisualizerPanel [] parameter_visualizers;
 		KeyonMeterPanel keyon_meter_panel;
 
+		void Init ()
+		{
+			brush_white_key = new SolidColorBrush (color_white_key);
+			brush_black_key = new SolidColorBrush (color_black_key);
+			brush_keyon = new SolidColorBrush (color_keyon);
+			brush_hold = new SolidColorBrush (color_hold);
+		}
+
 		protected override void OnApplicationSetup ()
 		{
+			Init ();
+
 #if !Moonlight
 			if (output == null)
 				output = MidiDeviceManager.OpenOutput (OutputDeviceID ?? MidiDeviceManager.DefaultOutputDeviceID);
@@ -175,10 +185,12 @@ namespace mldsp
 			}
 		}
 
+		Brush brush_white_key, brush_black_key, brush_keyon, brush_hold;
+
 		void StopViews ()
 		{
-			var wb = new SolidColorBrush (color_white_key);
-			var bb = new SolidColorBrush (color_black_key);
+			var wb = brush_white_key;
+			var bb = brush_black_key;
 			for (int ch = 0; ch < 16; ch++)
 				for (int i = 0; i < 128 - 24; i++)
 					if (key_rectangles [ch, i] != null) // FIXME: find out why some of them are null.
@@ -255,16 +267,16 @@ namespace mldsp
 				int note = GetKeyIndexForNote (m.Msb);
 				if (note < 0)
 					break; // out of range
-				key_rectangles [m.Channel, note].Fill = new SolidColorBrush (color_keyon);
+				key_rectangles [m.Channel, note].Fill = brush_keyon;
 				keyon_meter_panel.ProcessKeyOn (m.Channel, m.Lsb);
 				break;
 			case SmfMessage.NoteOff:
 				note = GetKeyIndexForNote (m.Msb);
 				if (note < 0)
 					break; // out of range
-				Color c = registers.Channels [m.Channel].Controls [0x40] > 63 ? color_hold :
-					IsWhiteKey (note) ? color_white_key : color_black_key;
-				key_rectangles [m.Channel, note].Fill = new SolidColorBrush (c);
+				Brush c = registers.Channels [m.Channel].Controls [0x40] > 63 ? brush_hold :
+					IsWhiteKey (note) ? brush_white_key : brush_black_key;
+				key_rectangles [m.Channel, note].Fill = c;
 				break;
 			case SmfMessage.CC:
 				switch (m.Msb) {
@@ -294,7 +306,7 @@ namespace mldsp
 							if (rect == null)
 								continue;
 							if (((SolidColorBrush) rect.Fill).Color == color_hold)
-								key_rectangles [m.Channel, note].Fill = new SolidColorBrush (IsWhiteKey (i) ? color_white_key : color_black_key);
+								key_rectangles [m.Channel, note].Fill = IsWhiteKey (i) ? brush_white_key : brush_black_key;
 						}
 					}
 					break;

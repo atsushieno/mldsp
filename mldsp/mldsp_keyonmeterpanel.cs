@@ -38,7 +38,7 @@ namespace mldsp
 				s.Duration = TimeSpan.FromSeconds (4);
 				Storyboard.SetTarget (s, r);
 				Storyboard.SetTargetProperty (s, new PropertyPath ("Height"));
-				s.Children.Add (new DoubleAnimation () { By = 4 });
+				s.Children.Add (new DoubleAnimation () { By = 8 });
 				keyon_storyboards [i] = s;
 				
 				var cf = new Ellipse () { Width = 16, Height = 16 };
