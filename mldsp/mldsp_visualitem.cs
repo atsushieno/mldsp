@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 
@@ -103,8 +104,14 @@ namespace mldsp
 			Label = new TextBlock ();
 			Label.Text = label + ":";
 			ChangeDirection = new TextBlock ();
-			ChangeDirection.Text = "*";
+			ChangeDirection.Text = "";
 			Value = new TextBlock ();
+			direction_fadeout = new Storyboard ();
+			direction_fadeout.BeginTime = TimeSpan.FromSeconds (2);
+			direction_fadeout.Duration = new Duration (TimeSpan.FromSeconds (6));
+			Storyboard.SetTarget (direction_fadeout, ChangeDirection);
+			Storyboard.SetTargetProperty (direction_fadeout, new PropertyPath ("Opacity"));
+			direction_fadeout.Children.Add (new DoubleAnimation () { From = 1.0, To = 0.0 });
 
 			SetValue (initialValue);
 
@@ -148,6 +155,7 @@ namespace mldsp
 		public TextBlock ChangeDirection { get; private set; }
 		public TextBlock Value { get; private set; }
 		int current_value;
+		Storyboard direction_fadeout;
 
 		public void SetValue (int value)
 		{
@@ -155,6 +163,8 @@ namespace mldsp
 				ChangeDirection.Text = "\u25B2"; // FIXME: start animation
 			else if (current_value > value)
 				ChangeDirection.Text = "\u25BC"; // FIXME: start animation
+			ChangeDirection.Opacity = 1.0;
+			direction_fadeout.Begin ();
 			Value.Text = value.ToString ("D03");
 			current_value = value;
 		}
