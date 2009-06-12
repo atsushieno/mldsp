@@ -23,17 +23,16 @@ namespace mldsp
 			progress = new Rectangle () { Width = 0, Height = 8 };
 			Canvas.SetTop (progress, 8);
 			Canvas.SetLeft (progress, 10);
-			progress_slot = new Rectangle () { Width = 140, Height = 8 };
+			progress_slot = new Rectangle () { Width = 180, Height = 8 };
+			progress_slot.Fill = new SolidColorBrush (App.color_background);
 			Canvas.SetTop (progress_slot, 8);
 			Canvas.SetLeft (progress_slot, 10);
-			progress_slot.MouseLeftButtonUp += delegate (object o, MouseButtonEventArgs a) {
-				if (ProgressClicked != null)
-					ProgressClicked (progress_slot, a);
-			};
+			progress.MouseLeftButtonUp += OnProgressClicked;
+			progress_slot.MouseLeftButtonUp += OnProgressClicked;
 			progress_story = new Storyboard ();
 			Storyboard.SetTarget (progress_story, progress);
 			Storyboard.SetTargetProperty (progress_story, new PropertyPath ("Width"));
-			progress_story.Children.Add (new DoubleAnimation () { From = 0, To = 140 });
+			progress_story.Children.Add (new DoubleAnimation () { From = 0, To = 180 });
 
 			Children.Add (progress_slot);
 			Children.Add (progress);
@@ -90,6 +89,12 @@ namespace mldsp
 		public event MouseButtonEventHandler ProgressClicked;
 
 		List<PlayerStatusItem> items = new List<PlayerStatusItem> ();
+
+		void OnProgressClicked (object o, MouseButtonEventArgs a) 
+		{
+			if (ProgressClicked != null)
+				ProgressClicked (progress_slot, a);
+		}
 
 		void AddText (PlayerState state, string text, int x, int y, MouseButtonEventHandler mouseDown, MouseButtonEventHandler mouseUp)
 		{

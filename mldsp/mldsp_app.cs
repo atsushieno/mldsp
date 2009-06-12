@@ -88,6 +88,8 @@ namespace mldsp
 
 		void OnProgressClicked (object o, MouseButtonEventArgs a)
 		{
+			if (player == null)
+				return;
 			Rectangle r = (Rectangle) o;
 			Point p = a.GetPosition (r);
 			SkipTo ((int) (p.X / r.Width * play_time_status_panel.TotalTime));
@@ -95,6 +97,8 @@ namespace mldsp
 
 		public void SkipTo (int milliseconds)
 		{
+			if (player == null)
+				return;
 			StopViews ();
 			player.Seek (milliseconds);
 			foreach (var view in player_status_views)
