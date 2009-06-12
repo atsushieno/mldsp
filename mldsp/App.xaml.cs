@@ -63,7 +63,7 @@ public static void setup ()
 font_title = ProcessingApplication.Current.@createFont (@"PalatinoLinotype-BoldItalic", 16);
 font16 = ProcessingApplication.Current.@createFont (@"Tahoma", 16);
 font8 = ProcessingApplication.Current.@createFont (@"Tahoma", 8);
-ProcessingApplication.Current.@size (720, ch_height * channels + 10);
+ProcessingApplication.Current.@size (760, ch_height * channels + 10);
 ProcessingApplication.Current.@background (color_background);
 for (int i = 0; i < channels; i = i + 1)
 {
@@ -85,13 +85,13 @@ ProcessingApplication.Current.@popMatrix ();
 public static void setupSpectrumAnalyzer ()
 {
 ProcessingApplication.Current.@stroke (color_usual);
-ProcessingApplication.Current.@line (0, 0, 300, 0);
+ProcessingApplication.Current.@line (10, 0, 350, 0);
 ProcessingApplication.Current.@textFont (font8);
 ProcessingApplication.Current.@fill (color_dark);
-ProcessingApplication.Current.@text (@"SPECTRUM ANALYZER", 210, text_height * 2 - 2);
+ProcessingApplication.Current.@text (@"SPECTRUM ANALYZER", 250, text_height * 2 - 2);
 ProcessingApplication.Current.@stroke (color_hidden);
 ProcessingApplication.Current.@fill (color_hidden);
-ProcessingApplication.Current.@rect (0, text_height * 2, 300, 100);
+ProcessingApplication.Current.@rect (10, text_height * 2, 340, 100);
 }
 public static void setupPlayInfoSection ()
 {

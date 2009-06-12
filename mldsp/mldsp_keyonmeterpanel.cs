@@ -17,20 +17,23 @@ namespace mldsp
 		Storyboard [] keyon_storyboards = new Storyboard [16];
 		Ellipse [] pan_frames = new Ellipse [16];
 		Ellipse [] pan_indicators = new Ellipse [16];
+		TextBlock [] prog_values = new TextBlock [16];
+		TextBlock [] bank_values = new TextBlock [16];
+		TextBlock prog_label, bank_label;
 
 		public KeyonMeterPanel ()
 		{
 			for (int i = 0; i < keyon_meter_frames.Length; i++) {
 				var rf = new Rectangle () { Width = 16, Height = 66 };
 				keyon_meter_frames [i] = rf;
-				Canvas.SetLeft (rf, i * 20);
+				Canvas.SetLeft (rf, i * 22 + 8);
 				Canvas.SetTop (rf, 0);
 				Children.Add (rf);
 
 				var r = new Rectangle () { Width = 16 - 2, Height = 64 };
 				keyon_meters [i] = r;
 				r.Fill = new SolidColorBrush (App.color_background);
-				Canvas.SetLeft (r, i * 20 + 1);
+				Canvas.SetLeft (r, i * 22 + 9);
 				Canvas.SetTop (r, 0 + 1);
 				Children.Add (r);
 				
@@ -43,7 +46,7 @@ namespace mldsp
 				
 				var cf = new Ellipse () { Width = 16, Height = 16 };
 				pan_frames [i] = cf;
-				Canvas.SetLeft (cf, i * 20);
+				Canvas.SetLeft (cf, i * 22 + 8);
 				Canvas.SetTop (cf, 68);
 				Children.Add (cf);
 				
@@ -52,13 +55,55 @@ namespace mldsp
 				pan_indicators [i] = ci;
 				SetPan (i, 64);
 				Children.Add (ci);
+
+				var pv = new TextBlock () { Text = "000", FontSize = 8 };
+				Canvas.SetLeft (pv, i * 22 + 8);
+				Canvas.SetTop (pv, 84);
+				prog_values [i] = pv;
+				Children.Add (pv);
+
+				var bv = new TextBlock () { Text = "000", FontSize = 8 };
+				bv.Tag = 0;
+				Canvas.SetLeft (bv, i * 22 + 8);
+				Canvas.SetTop (bv, 94);
+				bank_values [i] = bv;
+				Children.Add (bv);
 			}
+
+			var pl = new TextBlock () { Text = "P", FontSize = 8 };
+			Canvas.SetLeft (pl, 0);
+			Canvas.SetTop (pl, 84);
+			prog_label = pl;
+			Children.Add (pl);
+				
+			var bl = new TextBlock () { Text = "B", FontSize = 8 };
+			Canvas.SetLeft (bl, 0);
+			Canvas.SetTop (bl, 94);
+			bank_label = bl;
+			Children.Add (bl);
+		}
+		
+		public void SetProgram (int channel, byte value)
+		{
+			prog_values [channel].Text = value.ToString ("D03");
+		}
+		
+		public void SetBank (int channel, byte value, bool msb)
+		{
+			var b = bank_values [channel];
+			int current = (int) b.Tag;
+			if (msb)
+			//	current = (current & 0x7F) + (value << 7);
+			//else
+				current = (current & 0x3F80) + value;
+			b.Tag = current;
+			b.Text = current.ToString ("D03");
 		}
 		
 		public void SetPan (int channel, byte value)
 		{
 			var p = pan_indicators [channel];
-			Canvas.SetLeft (p, 6 + channel * 20 - 3 * Math.Cos (Math.PI * value / 128));
+			Canvas.SetLeft (p, 6 + channel * 22 + 8 - 3 * Math.Cos (Math.PI * value / 128));
 			Canvas.SetTop (p, 73 - 3 * Math.Sin (Math.PI * value / 128));
 		}
 		
@@ -69,6 +114,12 @@ namespace mldsp
 					r.Stroke = value;
 				foreach (var c in pan_frames)
 					c.Stroke = value;
+				foreach (var p in prog_values)
+					p.Foreground = value;
+				foreach (var b in bank_values)
+					b.Foreground = value;
+				prog_label.Foreground = value;
+				bank_label.Foreground = value;
 			}
 		}
 		

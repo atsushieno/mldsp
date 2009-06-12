@@ -28,14 +28,14 @@ namespace mldsp
 			AddText ("Count", 12, 56, true);
 			AddText ("Tempo", 8, 68, true);
 
-			AddText ("00:00.00", 60, 6, false);
+			AddText ("00:00.00", 70, 6, false);
 			passed_time = last;
-			AddText ("00:00.00", 60, 28, false);
+			AddText ("00:00.00", 70, 28, false);
 			total_time = last;
-			AddText ("00000000", 60, 50, false);
+			AddText ("00000000", 70, 50, false);
 			tick_count = last;
 			tick_count.Tag = 0;
-			AddText ("00000000", 60, 72, false);
+			AddText ("00000000", 70, 72, false);
 			tempo = last;
 			last = null;
 		}

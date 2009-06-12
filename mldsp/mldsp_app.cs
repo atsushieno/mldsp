@@ -108,7 +108,7 @@ namespace mldsp
 			p.LabelFontSize = 10;
 			p.ValueFontSize = 16;
 			p.Brush = new SolidColorBrush (color_usual);
-			Canvas.SetLeft (p, 560);
+			Canvas.SetLeft (p, 600);
 			Canvas.SetTop (p, 50);
 			Host.Children.Add (p);
 			play_time_status_panel = p;
@@ -296,8 +296,17 @@ namespace mldsp
 					IsWhiteKey (note) ? brush_white_key : brush_black_key;
 				key_rectangles [m.Channel, note].Fill = c;
 				break;
+			case SmfMessage.Program:
+				keyon_meter_panel.SetProgram (m.Channel, m.Msb);
+				break;
 			case SmfMessage.CC:
 				switch (m.Msb) {
+				case SmfCC.BankSelect:
+					keyon_meter_panel.SetBank (m.Channel, m.Lsb, true);
+					break;
+				case SmfCC.BankSelectLsb:
+					keyon_meter_panel.SetBank (m.Channel, m.Lsb, false);
+					break;
 				case SmfCC.Pan:
 					keyon_meter_panel.SetPan (m.Channel, m.Lsb);
 					break;
