@@ -79,9 +79,27 @@ namespace mldsp
 			p.RewindMouseDown += delegate { StartRewind (); };
 			p.LoadClicked += delegate { SelectFile (); };
 			
+			p.ProgressClicked += OnProgressClicked;
+
 			Host.Children.Add (p);
 			player_status_panel = p;
 			player_status_views.Add (p);
+		}
+
+		void OnProgressClicked (object o, MouseButtonEventArgs a)
+		{
+			Rectangle r = (Rectangle) o;
+			Point p = a.GetPosition (r);
+			SkipTo ((int) (p.X / r.Width * play_time_status_panel.TotalTime));
+		}
+
+		public void SkipTo (int milliseconds)
+		{
+			StopViews ();
+			player.Seek (milliseconds);
+			foreach (var view in player_status_views)
+				view.ProcessSkip (milliseconds);
+			Play ();
 		}
 
 		void AddPlayTimeStatusPanel ()

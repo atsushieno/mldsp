@@ -93,6 +93,23 @@ namespace Commons.Music.Midi.Player
 			Mute ();
 		}
 
+		public void Seek (int milliseconds)
+		{
+			int v = 0;
+			PlayDeltaTime = 0;
+			for (event_idx = 0; event_idx < events.Count; event_idx++) {
+				var e = events [event_idx];
+				int l = GetDeltaTimeInMilliseconds (e.DeltaTime);
+				v += l;
+				if (v > milliseconds) {
+					event_idx--;
+					return;
+				}
+				PlayDeltaTime += e.DeltaTime;
+			}
+			state = PlayerState.Paused;
+		}
+
 		int event_idx = 0;
 
 		public void PlayerLoop ()
@@ -252,6 +269,11 @@ namespace Commons.Music.Midi.Player
 			default: // do nothing
 				return;
 			}
+		}
+
+		public void Seek (int milliseconds)
+		{
+			player.Seek (milliseconds);
 		}
 	}
 }

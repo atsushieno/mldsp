@@ -174,7 +174,11 @@ namespace mldsp
 		
 		public void ProcessSkip (int seekMilliseconds)
 		{
+			progress_story.Stop ();
+			progress_story.Begin ();
 			progress_story.Seek (TimeSpan.FromMilliseconds (seekMilliseconds));
+			circle_timer.Start ();
+			State = PlayerState.Playing;
 		}
 
 		public void ProcessPause ()

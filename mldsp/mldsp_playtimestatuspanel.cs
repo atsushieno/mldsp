@@ -138,6 +138,10 @@ namespace mldsp
 		
 		public void ProcessSkip (int seekMilliseconds)
 		{
+			timer.Stop ();
+			timer_offset = TimeSpan.FromMilliseconds (seekMilliseconds);
+			timer_resumed = DateTime.Now;
+			timer.Start ();
 		}
 
 		public void ProcessPause ()
