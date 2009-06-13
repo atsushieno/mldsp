@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.1
+VERSION=0.1.0
 PACKAGE=mldsp
 prefix=/usr/local
 config=DEBUG
