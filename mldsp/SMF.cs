@@ -320,7 +320,7 @@ namespace Commons.Music.Midi
 
 		public void WriteHeader (short format, short tracks, short deltaTimeSpec)
 		{
-			stream.Write (Encoding.ASCII.GetBytes ("MThd"), 0, 4);
+			stream.Write (Encoding.UTF8.GetBytes ("MThd"), 0, 4);
 			WriteShort (0);
 			WriteShort (6);
 			WriteShort (format);
@@ -330,7 +330,7 @@ namespace Commons.Music.Midi
 
 		public void WriteTrack (SmfTrack track)
 		{
-			stream.Write (Encoding.ASCII.GetBytes ("MTrk"), 0, 4);
+			stream.Write (Encoding.UTF8.GetBytes ("MTrk"), 0, 4);
 			WriteInt (GetTrackDataSize (track));
 
 			byte running_status = 0;
