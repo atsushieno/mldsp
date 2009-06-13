@@ -1,0 +1,6 @@
+Name: mldsp.clr
+Description: mldsp.clr
+Version: 0.1
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/mldsp-clr.dll

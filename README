@@ -16,20 +16,41 @@ There are two outcomes from this project:
 	  effort (which is part of PortMedia project):
 	  http://portmedia.sourceforge.net/
 
-It's almost just started, has lots of stubs and misses useful functionality.
+It's almost just started, has some stubs and misses useful functionality.
 
-** Usage
 
-	mono mldsp-gtk.exe [deviceID]
+** Build and run mldsp/web
+
+	Just open mldsp-web.sln, build and run it.
+
+** Build and run mldsp/gtk
+
+	You can either open mldsp.sln in MonoDevelop, or run make instead:
+
+		./configure [--prefix=/path/to/install]
+		make
+		make install
+
+	There is a Makefile that can let you build and install mldsp.
+	(It is generated from MonoDevelop Makefile integration, with some
+	hacky tricks to copy xap files into lib directory.)
+
+	Once you have built and installed mldsp, just run:
+
+	mldsp [deviceID]
 
 	If you don't know what is your preferred device, just give "?"
 	as the argument, and it will list your MIDI output devices.
 	By default, it would be Thru port (that makes no sound).
 
-** Dependency hell
+** Dependencies
 
 There is not a few dependencies that are not easy to get. For mldsp/web
-it is only tsukimi that is actual dependency.
+it is only Tsukimi that is actual dependency.
+
+	- Moonlight.Gtk: when you build moon with-managed=yes, Moonlight.Gtk
+	  is also built too. pkg-config will tell you its availability as
+	  moonlight-gtk package.
 
 	- Tsukimi: it is my attempt to port processing application to
 	  Moonlight land.
@@ -37,18 +58,14 @@ it is only tsukimi that is actual dependency.
 	  but it's not automatically generated anymore (I've added changes
 	  manually).
 
-	- Moonlight.Gtk: when you build moon with-managed=yes, Moonlight.Gtk
-	  is also built too. pkg-config will tell you its availability as
-	  moonlight-gtk package.
+	  I have put the built-in dlls in "build" directory.
 
-	- portmidi-sharp: portmidi itself is an external project, but since
+	- portmidi(-sharp): portmidi itself is an external project, but since
 	  it does not provide shared libraries, you have to build my
-	  shared version of it. Check my portmidi-sharp project for details:
-	  http://github.com/atsushieno/portmidi-sharp/
+	  shared version of it. Check my portmidi-sharedlib project:
+	  http://github.com/atsushieno/portmidi-sharedlib/
 	  PortMidiSharp binding is actually in mldsp source, so you don't
 	  have to wonder how it could be built and installed (there is no
 	  installation instructions, nor even portmidi-sharp.dll build).
 
-Since no one other than myself will be able to get it working, I'll make
-some build changes to ease the dependency hell at some point.
 
