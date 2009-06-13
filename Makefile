@@ -1,5 +1,5 @@
 
-EXTRA_DIST =  rules.make configure Makefile.include build/Processing.Core.CLR.dll
+EXTRA_DIST =  rules.make configure Makefile.include build/Processing.Core.CLR.dll build/Processing.Core.CLR.dll.mdb build/Processing.Core.dll build/Processing.Core.dll.mdb
 
 all: all-recursive
 

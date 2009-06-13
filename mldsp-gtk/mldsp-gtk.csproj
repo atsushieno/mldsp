@@ -57,7 +57,7 @@
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app.desktop" />
+    <Content Include="Makefile" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -85,7 +85,6 @@
   <ItemGroup>
     <None Include="..\README" />
     <None Include="..\build\mldsp.clr.xap">
-      <Gettext-ScanForTranslations>false</Gettext-ScanForTranslations>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="..\update-xap" />
