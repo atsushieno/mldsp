@@ -318,6 +318,13 @@ namespace Commons.Music.Midi
 			stream.WriteByte ((byte) (v % 0x100));
 		}
 
+		public void WriteMusic (SmfMusic music)
+		{
+			WriteHeader (music.Format, (short) music.Tracks.Count, music.DeltaTimeSpec);
+			foreach (var track in music.Tracks)
+				WriteTrack (track);
+		}
+
 		public void WriteHeader (short format, short tracks, short deltaTimeSpec)
 		{
 			stream.Write (Encoding.UTF8.GetBytes ("MThd"), 0, 4);
