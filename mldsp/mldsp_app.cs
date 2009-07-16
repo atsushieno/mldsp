@@ -28,6 +28,7 @@ namespace mldsp
 		PlayerStatusPanel player_status_panel;
 		PlayTimeStatusPanel play_time_status_panel;
 		ParameterVisualizerPanel [] parameter_visualizers;
+		SpectrumAnalyzerPanel spectrum_analyzer_panel;
 		KeyonMeterPanel keyon_meter_panel;
 
 		void Init ()
@@ -50,6 +51,7 @@ namespace mldsp
 			AddParameterVisualizer ();
 			AddPlayerStatusPanel ();
 			AddPlayTimeStatusPanel ();
+			AddSpectrumAnalyzerPanel ();
 			AddKeyonMeterPanel ();
 		}
 
@@ -62,7 +64,20 @@ namespace mldsp
 			Canvas.SetTop (keyon_meter_panel, 300);
 			Host.Children.Add (keyon_meter_panel);
 		}
-		
+
+		void AddSpectrumAnalyzerPanel ()	
+		{
+			var p = new SpectrumAnalyzerPanel ();
+			spectrum_analyzer_panel = p;
+			p.Foreground = new SolidColorBrush (color_ch_colored);
+			p.Background = new SolidColorBrush (color_hidden);
+			p.DarkColor = new SolidColorBrush (App.color_dark);
+			p.FontSize = 8;
+			Canvas.SetLeft (p, 400);
+			Canvas.SetTop (p, 170);
+			Host.Children.Add (p);
+		}
+
 		void AddPlayerStatusPanel ()
 		{
 			var p = new PlayerStatusPanel ();

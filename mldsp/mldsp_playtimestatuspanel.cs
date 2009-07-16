@@ -28,9 +28,9 @@ namespace mldsp
 			AddText ("Count", 12, 56, true);
 			AddText ("Tempo", 8, 68, true);
 
-			AddText ("00:00.00", 70, 6, false);
+			AddText ("00:00", 104, 6, false);
 			passed_time = last;
-			AddText ("00:00.00", 70, 28, false);
+			AddText ("00:00", 104, 28, false);
 			total_time = last;
 			AddText ("00000000", 70, 50, false);
 			tick_count = last;
@@ -50,7 +50,7 @@ namespace mldsp
 			set {
 				total_time.Tag = value;
 				TimeSpan ts = TimeSpan.FromMilliseconds (value);
-				total_time.Text = String.Format ("{0:D02}:{1:D02}.{2:D03}", (int) ts.TotalMinutes, (int) ts.Seconds, (int) ts.Milliseconds);
+				total_time.Text = String.Format ("{0:D02}:{1:D02}", (int) ts.TotalMinutes, (int) ts.Seconds);
 			}
 		}
 		
@@ -124,11 +124,11 @@ namespace mldsp
 		public void ProcessBeginPlay (MidiPlayer player, int totalMilliseconds)
 		{
 			timer = new DispatcherTimer ();
-			timer.Interval = TimeSpan.FromMilliseconds (75);
+			timer.Interval = TimeSpan.FromMilliseconds (100);
 			timer.Tick += delegate {
 				tick_count.Text = player.PlayDeltaTime.ToString ("D08");
 				TimeSpan now = GetTimerOffsetWithTempoRatio () + timer_offset;
-				passed_time.Text = String.Format ("{0:D02}:{1:D02}.{2:D03}", (int) now.TotalMinutes, now.Seconds, now.Milliseconds);
+				passed_time.Text = String.Format ("{0:D02}:{1:D02}", (int) now.TotalMinutes, now.Seconds);
 			};
 			timer_offset = TimeSpan.Zero;
 			last_tempo_changed = timer_resumed = DateTime.Now;

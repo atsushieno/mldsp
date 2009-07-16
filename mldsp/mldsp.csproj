@@ -80,6 +80,7 @@
     <Compile Include="mldsp_playtimestatuspanel.cs" />
     <Compile Include="mldsp_playerstatuspanel.cs" />
     <Compile Include="mldsp_keyonmeterpanel.cs" />
+    <Compile Include="mldsp_spectrumanalyzer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v2.0\Microsoft.Silverlight.CSharp.targets" />

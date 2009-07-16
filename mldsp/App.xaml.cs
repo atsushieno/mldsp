@@ -79,19 +79,7 @@ setupPlayInfoSection ();
 ProcessingApplication.Current.@popMatrix ();
 ProcessingApplication.Current.@pushMatrix ();
 ProcessingApplication.Current.@translate (400, 160);
-setupSpectrumAnalyzer ();
 ProcessingApplication.Current.@popMatrix ();
-}
-public static void setupSpectrumAnalyzer ()
-{
-ProcessingApplication.Current.@stroke (color_usual);
-ProcessingApplication.Current.@line (10, 0, 350, 0);
-ProcessingApplication.Current.@textFont (font8);
-ProcessingApplication.Current.@fill (color_dark);
-ProcessingApplication.Current.@text (@"SPECTRUM ANALYZER", 250, text_height * 2 - 2);
-ProcessingApplication.Current.@stroke (color_hidden);
-ProcessingApplication.Current.@fill (color_hidden);
-ProcessingApplication.Current.@rect (10, text_height * 2, 340, 100);
 }
 public static void setupPlayInfoSection ()
 {
