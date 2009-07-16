@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Gtk;
 using Moonlight.Gtk;
 using System.Windows;
@@ -17,10 +18,11 @@ namespace mldspgtk
 			MoonlightRuntime.Init ();
 			Window w = new Window ("mldsp");
 			w.DefaultHeight = 520;
-			w.DefaultWidth = 720;
+			w.DefaultWidth = 760;
 			w.DeleteEvent += delegate { Application.Quit (); };
 			var moon = new MoonlightHost ();
-			moon.LoadXap ("mldsp.clr.xap");
+			var xappath = Path.Combine (Path.GetDirectoryName (new Uri (typeof (MainClass).Assembly.CodeBase).LocalPath), "mldsp.clr.xap");
+			moon.LoadXap (xappath);
 			if (args.Length > 0) {
 				int device;
 				if (int.TryParse (args [0], out device))

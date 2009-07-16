@@ -15,7 +15,7 @@ Global
 		{3E3A2388-9240-483D-866E-3E9F0EC973F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		version = 0.1
+		version = 0.1.0
 		StartupItem = mldsp\mldsp.csproj
 	EndGlobalSection
 EndGlobal

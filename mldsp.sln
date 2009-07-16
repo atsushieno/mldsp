@@ -27,7 +27,7 @@ Global
 		{9866FD12-0067-48B1-A95F-5BB44A13C276}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		version = 0.1
+		version = 0.1.0
 		StartupItem = mldsp-gtk\mldsp-gtk.csproj
 	EndGlobalSection
 EndGlobal
