@@ -97,7 +97,7 @@ ProcessingApplication.Current.@textFont (font8);
 ProcessingApplication.Current.@fill (color_ch_text_dark);
 ProcessingApplication.Current.@text (@"music visualizer and file selector", 70, text_height);
 ProcessingApplication.Current.@fill (color_ch_text_colored);
-ProcessingApplication.Current.@text (@"ver 0.01 / for moonlight 2.0 (C)2009 atsushieno", 70, text_height * 2);
+ProcessingApplication.Current.@text (@"ver 0.02 / for moonlight 2.0 (C)2009 atsushieno", 70, text_height * 2);
 ProcessingApplication.Current.@stroke (color_ch_dark);
 ProcessingApplication.Current.@line (70, 18, 310, 18);
 }

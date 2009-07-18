@@ -39,7 +39,7 @@ namespace mldsp
 				
 				for (int x = 0; x < 66 - 3; x += 3) {
 					var xl = new Rectangle () { Width = 14, Height = 2};
-					xl.Stroke = new SolidColorBrush (App.color_background);
+					xl.Fill = new SolidColorBrush (App.color_background);
 					Canvas.SetLeft (xl, i * 22 + 9);
 					Canvas.SetTop (xl, 0 + 1 + x);
 					Children.Add (xl);
@@ -139,7 +139,7 @@ namespace mldsp
 			}
 		}
 		
-		public void ProcessKeyOn (byte channel, byte velocity)
+		public void ProcessKeyOn (byte channel, byte note, byte velocity)
 		{
 			var s = keyon_storyboards [channel];
 			s.Stop ();

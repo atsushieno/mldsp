@@ -76,6 +76,7 @@ namespace mldsp
 			Canvas.SetLeft (p, 400);
 			Canvas.SetTop (p, 170);
 			Host.Children.Add (p);
+			player_status_views.Add (p);
 		}
 
 		void AddPlayerStatusPanel ()
@@ -193,6 +194,7 @@ namespace mldsp
 #endif
 			player.Finished += delegate { disp.BeginInvoke (() => StopViews ()); };
 			registers = new MidiMachine ();
+			spectrum_analyzer_panel.Registers = registers;
 			player.MessageReceived += delegate (SmfMessage m) {
 				registers.ProcessMessage (m);
 			};
@@ -305,7 +307,8 @@ namespace mldsp
 				if (note < 0)
 					break; // out of range
 				key_rectangles [m.Channel, note].Fill = brush_keyon;
-				keyon_meter_panel.ProcessKeyOn (m.Channel, m.Lsb);
+				keyon_meter_panel.ProcessKeyOn (m.Channel, m.Msb, m.Lsb);
+				spectrum_analyzer_panel.ProcessKeyOn (m.Channel, m.Msb, m.Lsb);
 				break;
 			case SmfMessage.NoteOff:
 				note = GetKeyIndexForNote (m.Msb);
