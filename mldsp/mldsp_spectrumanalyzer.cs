@@ -112,8 +112,8 @@ namespace mldsp
 					volume_levels [i].Height = numbers [i];
 				}
 				if (numbers [i] < 100) {
-					numbers [i]++;
-					volume_levels [i].Height += 4;
+					numbers [i] += 3;
+					volume_levels [i].Height += 3;
 				}
 			}
 		}
@@ -128,10 +128,10 @@ namespace mldsp
 				numbers [note / 2] = (byte) baseValue;
 			double d;
 			int n;
-			for (n = note / 2, d = baseValue; n < 100 && d < 100; n++, d += 10.0)
+			for (n = note / 2, d = baseValue; n < 100 && d < 100; n++, d += 8.0)
 				if (numbers [n] > d)
 					numbers [n] = (byte) d;
-			for (n = note / 2, d = baseValue; n >= 0 && d < 100; n--, d += 10.0)
+			for (n = note / 2, d = baseValue; n >= 0 && d < 100; n--, d += 8.0)
 				if (numbers [n] > d)
 					numbers [n] = (byte) d;
 			
@@ -155,8 +155,10 @@ namespace mldsp
 		public void ProcessStop ()
 		{
 			timer.Stop ();
-			for (int i = 0; i < 64; i++)
+			for (int i = 0; i < 64; i++) {
+				numbers [i] = 100;
 				volume_levels [i].Height = 100;
+			}
 		}
 		
 		public void ProcessResume ()
