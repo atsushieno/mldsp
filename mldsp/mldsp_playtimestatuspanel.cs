@@ -13,7 +13,7 @@ namespace mldsp
 	{
 		public PlayTimeStatusPanel ()
 		{
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 5; i++) {
 				var r = new Rectangle () { Width = 5, Height = 18 };
 				Canvas.SetTop (r, i * 22 + 6);
 				Canvas.SetLeft (r, 1);
@@ -27,6 +27,7 @@ namespace mldsp
 			AddText ("Tick", 8, 46, true);
 			AddText ("Count", 12, 56, true);
 			AddText ("Tempo", 8, 68, true);
+			AddText ("Meter", 8, 92, true);
 
 			AddText ("00:00", 104, 6, false);
 			passed_time = last;
@@ -37,6 +38,9 @@ namespace mldsp
 			tick_count.Tag = 0;
 			AddText ("00000000", 70, 72, false);
 			tempo = last;
+			// FIXME: It should also handle in-progress meters.
+			AddText ("4/4", 70, 96, false);
+			time_meter = last;
 			last = null;
 		}
 
@@ -44,6 +48,7 @@ namespace mldsp
 		TextBlock total_time;
 		TextBlock tick_count;
 		TextBlock tempo;
+		TextBlock time_meter;
 
 		public int TotalTime {
 			get { return (int) total_time.Tag; }
@@ -61,6 +66,14 @@ namespace mldsp
 				last_tempo_changed = DateTime.Now;
 				tempo.Text = value.ToString ("D08");
 			}
+		}
+
+		byte [] time_meter_values;
+
+		public void SetTimeMeterValues (byte [] data)
+		{
+			time_meter_values = data.Clone () as byte [];
+			time_meter.Text = data [0] + "/" + Math.Pow (2, data [1]);
 		}
 
 		public double LabelFontSize {
@@ -113,7 +126,7 @@ namespace mldsp
 		DateTime timer_resumed;
 		TimeSpan timer_offset;
 		DateTime last_tempo_changed;
-		int current_bpm, tick_offset;
+		int current_bpm = 120, tick_offset;
 		double tempo_ratio = 1.0;
 
 		TimeSpan GetTimerOffsetWithTempoRatio ()

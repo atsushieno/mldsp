@@ -369,6 +369,9 @@ namespace mldsp
 				break;
 			case SmfMessage.Meta:
 				switch (m.MetaType) {
+				case SmfMetaType.TimeSignature:
+					play_time_status_panel.SetTimeMeterValues (m.Data);
+					break;
 				case SmfMetaType.Tempo:
 					foreach (var view in player_status_views)
 						view.ProcessChangeTempo ((int) ((60.0 / SmfMetaType.GetTempo (m.Data)) * 1000000.0));
