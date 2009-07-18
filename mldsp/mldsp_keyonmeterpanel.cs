@@ -37,6 +37,14 @@ namespace mldsp
 				Canvas.SetTop (r, 0 + 1);
 				Children.Add (r);
 				
+				for (int x = 0; x < 66 - 3; x += 3) {
+					var xl = new Rectangle () { Width = 14, Height = 2};
+					xl.Stroke = new SolidColorBrush (App.color_background);
+					Canvas.SetLeft (xl, i * 22 + 9);
+					Canvas.SetTop (xl, 0 + 1 + x);
+					Children.Add (xl);
+				}
+				
 				var s = new Storyboard ();
 				s.Duration = TimeSpan.FromSeconds (4);
 				Storyboard.SetTarget (s, r);
