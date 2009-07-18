@@ -161,9 +161,11 @@ namespace mldsp
 		void CircleTick ()
 		{
 			circle_lines [circle_index].Stroke = progress_slot.Stroke;
+			circle_lines [(circle_index + circle_lines.Length / 2) % circle_lines.Length].Stroke = progress_slot.Stroke;
 			circle_index++;
 			circle_index %= circle_lines.Length;
 			circle_lines [circle_index].Stroke = progress.Fill;
+			circle_lines [(circle_index + circle_lines.Length / 2) % circle_lines.Length].Stroke = progress.Fill;
 		}
 
 		public void ProcessBeginPlay (MidiPlayer player, int totalMilliseconds)
