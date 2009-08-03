@@ -72,7 +72,8 @@ FILES = \
 	mldsp_playerstatuspanel.cs \
 	mldsp_playtimestatuspanel.cs \
 	mldsp_visualitem.cs \
-	mldsp_keyonmeterpanel.cs 
+	mldsp_keyonmeterpanel.cs \
+	mldsp_spectrumanalyzer.cs 
 
 DATA_FILES = 
 
@@ -85,7 +86,7 @@ EXTRAS = \
 REFERENCES =  \
 	System \
 	System.Core \
-	-pkg:moonlight-gtk
+	-pkg:silverdesktop
 
 DLL_REFERENCES =  \
 	../build/Processing.Core.CLR.dll

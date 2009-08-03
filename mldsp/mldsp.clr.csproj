@@ -54,6 +54,7 @@
     <Compile Include="mldsp_playtimestatuspanel.cs" />
     <Compile Include="mldsp_visualitem.cs" />
     <Compile Include="mldsp_keyonmeterpanel.cs" />
+    <Compile Include="mldsp_spectrumanalyzer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

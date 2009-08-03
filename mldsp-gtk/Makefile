@@ -75,17 +75,16 @@ PROCESSING_CORE_CLR_DLL = $(BUILD_DIR)/Processing.Core.CLR.dll
 PROCESSING_CORE_CLR_DLL_MDB = $(BUILD_DIR)/Processing.Core.CLR.dll.mdb
 MLDSP = $(BUILD_DIR)/mldsp
 
-FILES = \
+FILES =  \
+	AssemblyInfo.cs \
 	gtk-gui/generated.cs \
-	MainWindow.cs \
-	gtk-gui/MainWindow.cs \
+	gtk-gui/mldspgtk.MainWindow.cs \
 	Main.cs \
-	AssemblyInfo.cs 
+	MainWindow.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
-	gtk-gui/gui.stetic 
+RESOURCES = gtk-gui/gui.stetic 
 
 EXTRAS = \
 	../README \
@@ -94,12 +93,15 @@ EXTRAS = \
 	mldsp.in 
 
 REFERENCES =  \
-	System \
+	../mldsp/bin/Debug/mldsp.clr.dll \
 	Mono.Posix \
-	-pkg:gtk-sharp-2.0 \
-	-pkg:glib-sharp-2.0 \
 	-pkg:glade-sharp-2.0 \
-	-pkg:moonlight-gtk
+	-pkg:glib-sharp-2.0 \
+	-pkg:gtk-sharp-2.0 \
+	-pkg:moonlight-gtk \
+	-pkg:silverdesktop \
+	System \
+	System.Core
 
 DLL_REFERENCES = 
 

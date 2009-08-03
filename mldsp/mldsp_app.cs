@@ -45,8 +45,7 @@ namespace mldsp
 
 #if !Moonlight
 			if (output == null)
-				output = MidiDeviceManager.OpenOutput (OutputDeviceID ?? MidiDeviceManager.DefaultOutputDeviceID);
-			Console.WriteLine ("Opened Device " + OutputDeviceID);
+				ResetDevice (OutputDeviceID ?? MidiDeviceManager.DefaultOutputDeviceID);
 #endif
 			AddParameterVisualizer ();
 			AddPlayerStatusPanel ();
@@ -181,6 +180,18 @@ namespace mldsp
 
 		public int? OutputDeviceID { get; set; }
 
+		public void ResetDevice (int id)
+		{
+#if !Moonlight
+			Stop ();
+			Console.WriteLine (id);
+			if (output != null)
+				output.Close ();
+			output = MidiDeviceManager.OpenOutput (id);
+			OutputDeviceID = id;
+#endif
+		}
+
 		public void LoadFile (FileInfo filename, Stream stream)
 		{
 			Stop ();
@@ -216,7 +227,7 @@ namespace mldsp
 			}
 		}
 
-		void Stop ()
+		public void Stop ()
 		{
 			if (player != null) {
 				player.Dispose ();

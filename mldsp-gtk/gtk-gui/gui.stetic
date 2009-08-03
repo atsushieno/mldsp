@@ -2,19 +2,54 @@
 <stetic-interface>
   <configuration>
     <images-root-path>..</images-root-path>
+    <target-gtk-version>2.14</target-gtk-version>
   </configuration>
   <import>
     <widget-library name="glade-sharp, Version=2.14.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <widget-library name="Moonlight.Gtk, Version=0.0.0.0, Culture=neutral, PublicKeyToken=976ad8f3443f9a4d" />
     <widget-library name="../bin/Debug/mldsp-gtk.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="MainWindow" design-size="400 300">
+  <widget class="Gtk.Window" id="mldspgtk.MainWindow" design-size="457 300">
+    <action-group name="Default">
+      <action id="OptionsAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Options</property>
+        <property name="ShortLabel" translatable="yes">Options</property>
+      </action>
+      <action id="SelectDeviceAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Select Device</property>
+        <property name="ShortLabel" translatable="yes">Select Device</property>
+      </action>
+    </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
     <property name="WindowPosition">CenterOnParent</property>
     <signal name="DeleteEvent" handler="OnDeleteEvent" />
     <child>
-      <placeholder />
+      <widget class="Gtk.VBox" id="topmostVBox">
+        <property name="MemberName">TopmostVBox</property>
+        <property name="Spacing">6</property>
+        <child>
+          <widget class="Gtk.MenuBar" id="mainMenuBar">
+            <property name="MemberName" />
+            <node name="mainMenuBar" type="Menubar">
+              <node type="Menu" action="OptionsAction">
+                <node type="Menu" action="SelectDeviceAction" />
+              </node>
+            </node>
+          </widget>
+          <packing>
+            <property name="Position">0</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder />
+        </child>
+      </widget>
     </child>
   </widget>
 </stetic-interface>
