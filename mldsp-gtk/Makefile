@@ -99,7 +99,6 @@ REFERENCES =  \
 	-pkg:glib-sharp-2.0 \
 	-pkg:gtk-sharp-2.0 \
 	-pkg:moonlight-gtk \
-	-pkg:silverdesktop \
 	System \
 	System.Core
 

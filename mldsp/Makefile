@@ -86,7 +86,7 @@ EXTRAS = \
 REFERENCES =  \
 	System \
 	System.Core \
-	-pkg:silverdesktop
+	-pkg:moonlight-gtk
 
 DLL_REFERENCES =  \
 	../build/Processing.Core.CLR.dll

@@ -1,10 +1,10 @@
 #!/bin/bash
-VERSION=0.1.0
+VERSION=0.2.0
 PACKAGE=mldsp
 prefix=/usr/local
 config=DEBUG
 configurations=" DEBUG RELEASE"
-common_packages=" glade-sharp-2.0;2.13.90 glib-sharp-2.0;2.13.90 gtk-sharp-2.0;2.13.90 moonlight-gtk;1.9.6.99 silverdesktop;1.9.6.99"
+common_packages=" glade-sharp-2.0;2.13.90 glib-sharp-2.0;2.13.90 gtk-sharp-2.0;2.13.90 moonlight-gtk;1.9.6.99"
 
 
 usage ()
