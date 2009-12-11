@@ -7,6 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9866FD12-0067-48B1-A95F-5BB44A13C276}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <ReleaseVersion>0.2.1</ReleaseVersion>
+    <RootNamespace>mldsp.clr</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

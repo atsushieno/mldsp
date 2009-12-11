@@ -1,5 +1,5 @@
 
-EXTRA_DIST =  rules.make configure Makefile.include build/Processing.Core.CLR.dll build/Processing.Core.CLR.dll.mdb
+EXTRA_DIST =  rules.make configure Makefile.include build/Processing.Core.CLR.dll
 
 all: all-recursive
 
@@ -12,10 +12,10 @@ include $(top_srcdir)/rules.make
 
 #Warning: This is an automatically generated file, do not edit!
 ifeq ($(CONFIG),DEBUG)
- SUBDIRS =  mldsp-gtkTranslation mldsp mldsp-gtk
+ SUBDIRS =  mldsp mldsp-gtk
 endif
 ifeq ($(CONFIG),RELEASE)
- SUBDIRS =  mldsp-gtkTranslation mldsp mldsp-gtk
+ SUBDIRS =  mldsp mldsp-gtk
 endif
 
 

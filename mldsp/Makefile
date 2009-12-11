@@ -86,7 +86,7 @@ EXTRAS = \
 REFERENCES =  \
 	System \
 	System.Core \
-	-pkg:moonlight-gtk
+	-pkg:moonlight-gtk-2.0
 
 DLL_REFERENCES =  \
 	../build/Processing.Core.CLR.dll
@@ -112,7 +112,8 @@ $(build_xamlg_list): %.xaml.g.cs: %.xaml
 	xamlg '$<'
 
 
-$(ASSEMBLY) $(ASSEMBLY_MDB): $(build_sources) $(build_resources) $(build_datafiles) $(DLL_REFERENCES) $(PROJECT_REFERENCES) $(build_xamlg_list) $(build_satellite_assembly_list)
+$(ASSEMBLY_MDB): $(ASSEMBLY)
+$(ASSEMBLY): $(build_sources) $(build_resources) $(build_datafiles) $(DLL_REFERENCES) $(PROJECT_REFERENCES) $(build_xamlg_list) $(build_satellite_assembly_list)
 	make pre-all-local-hook prefix=$(prefix)
 	mkdir -p $(shell dirname $(ASSEMBLY))
 	make $(CONFIG)_BeforeBuild

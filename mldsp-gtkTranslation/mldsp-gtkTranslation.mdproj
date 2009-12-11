@@ -6,5 +6,6 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5C723350-5DAB-4AE5-8BEC-302E08A4199B}</ProjectGuid>
     <outputType>RelativeToOutput</outputType>
+    <ReleaseVersion>0.2.1</ReleaseVersion>
   </PropertyGroup>
 </Project>
