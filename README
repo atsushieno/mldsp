@@ -46,6 +46,8 @@ It still has some stubs and misses some useful functionality.
 	as the argument, and it will list your MIDI output devices.
 	By default, it would be Thru port (that makes no sound).
 
+	[updated] now you can simply select the device from the main menu.
+
 ** Dependencies
 
 There is not a few dependencies that are not easy to get. For mldsp/web
