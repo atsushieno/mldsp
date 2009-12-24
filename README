@@ -63,12 +63,13 @@ it is only Tsukimi that is actual dependency.
 
 	  I have put the built-in dlls in "build" directory.
 
-	- portmidi(-sharp): portmidi itself is an external project, but since
+	- portmidi(-sharp): portmidi itself is an external project<del>, but since
 	  it does not provide shared libraries, you have to build my
 	  shared version of it. Check my portmidi-sharedlib project:
-	  http://github.com/atsushieno/portmidi-sharedlib/
+	  http://github.com/atsushieno/portmidi-sharedlib/ </del>
+	  <ins>my explanation above is somewhat obsolete. Now portmidi is
+	  CMake-based and could build shared libraries too. So you don't
+	  need my hack above</ins>.
 	  PortMidiSharp binding is actually in mldsp source, so you don't
 	  have to wonder how it could be built and installed (there is no
 	  installation instructions, nor even portmidi-sharp.dll build).
-
-
