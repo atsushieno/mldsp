@@ -26,6 +26,6 @@ Global
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = mldsp-gtk\mldsp-gtk.csproj
-		version = 0.2.1
+		version = 0.2.2
 	EndGlobalSection
 EndGlobal

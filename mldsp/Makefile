@@ -86,7 +86,7 @@ EXTRAS = \
 REFERENCES =  \
 	System \
 	System.Core \
-	-pkg:moonlight-gtk-2.0
+	-pkg:moonlight-desktop-2.0
 
 DLL_REFERENCES =  \
 	../build/Processing.Core.CLR.dll

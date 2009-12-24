@@ -19,11 +19,11 @@ PROJECT_REFERENCES =  \
 BUILD_DIR = bin/Debug
 
 MLDSP_CLR_XAP_SOURCE=../build/mldsp.clr.xap
+PROCESSING_CORE_CLR_DLL_SOURCE=../build/Processing.Core.CLR.dll
+PROCESSING_CORE_CLR_DLL_MDB_SOURCE=../build/Processing.Core.CLR.dll.mdb
 MLDSP_CLR_DLL_SOURCE=../mldsp/bin/Debug/mldsp.clr.dll
 MLDSP_CLR_DLL=$(BUILD_DIR)/mldsp.clr.dll
 APP_XAML_SOURCE=../mldsp/App.xaml
-PROCESSING_CORE_CLR_DLL_SOURCE=../build/Processing.Core.CLR.dll
-PROCESSING_CORE_CLR_DLL_MDB_SOURCE=../build/Processing.Core.CLR.dll.mdb
 MLDSP_CLR_DLL_MDB_SOURCE=../mldsp/bin/Debug/mldsp.clr.dll.mdb
 MLDSP_CLR_DLL_MDB=$(BUILD_DIR)/mldsp.clr.dll.mdb
 MLDSP_GTK_EXE_MDB_SOURCE=bin/Debug/mldsp-gtk.exe.mdb
@@ -43,10 +43,10 @@ PROJECT_REFERENCES =  \
 BUILD_DIR = bin/Release
 
 MLDSP_CLR_XAP_SOURCE=../build/mldsp.clr.xap
-MLDSP_CLR_DLL=
-APP_XAML_SOURCE=../mldsp/App.xaml
 PROCESSING_CORE_CLR_DLL_SOURCE=../build/Processing.Core.CLR.dll
 PROCESSING_CORE_CLR_DLL_MDB_SOURCE=../build/Processing.Core.CLR.dll.mdb
+MLDSP_CLR_DLL=
+APP_XAML_SOURCE=../mldsp/App.xaml
 MLDSP_CLR_DLL_MDB=
 MLDSP_GTK_EXE_MDB=
 MLDSP_CLR_DLL2_SOURCE=../mldsp/bin/Release/mldsp-clr.dll
@@ -59,10 +59,10 @@ SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
 
 PROGRAMFILES = \
 	$(MLDSP_CLR_XAP) \
-	$(MLDSP_CLR_DLL) \
-	$(APP_XAML) \
 	$(PROCESSING_CORE_CLR_DLL) \
 	$(PROCESSING_CORE_CLR_DLL_MDB) \
+	$(MLDSP_CLR_DLL) \
+	$(APP_XAML) \
 	$(MLDSP_CLR_DLL_MDB) \
 	$(MLDSP_GTK_EXE_MDB) \
 	$(MLDSP_CLR_DLL2)  
@@ -74,9 +74,9 @@ BINARIES = \
 RESGEN=resgen2
 
 MLDSP_CLR_XAP = $(BUILD_DIR)/mldsp.clr.xap
-APP_XAML = $(BUILD_DIR)/App.xaml
 PROCESSING_CORE_CLR_DLL = $(BUILD_DIR)/Processing.Core.CLR.dll
 PROCESSING_CORE_CLR_DLL_MDB = $(BUILD_DIR)/Processing.Core.CLR.dll.mdb
+APP_XAML = $(BUILD_DIR)/App.xaml
 MLDSP = $(BUILD_DIR)/mldsp
 
 FILES = \
@@ -101,13 +101,14 @@ EXTRAS = \
 REFERENCES =  \
 	System \
 	Mono.Posix \
-	-pkg:moonlight-gtk-2.0 \
 	System.Core \
 	-pkg:glade-sharp-2.0 \
 	-pkg:glib-sharp-2.0 \
-	-pkg:gtk-sharp-2.0
+	-pkg:gtk-sharp-2.0 \
+	-pkg:moonlight-gtk-2.0
 
-DLL_REFERENCES = 
+DLL_REFERENCES =  \
+	../build/Processing.Core.CLR.dll
 
 CLEANFILES = $(PROGRAMFILES) $(BINARIES) 
 
@@ -120,10 +121,10 @@ include $(top_srcdir)/Makefile.include
 
 
 $(eval $(call emit-deploy-target,MLDSP_CLR_XAP))
-$(eval $(call emit-deploy-target,MLDSP_CLR_DLL))
-$(eval $(call emit-deploy-target,APP_XAML))
 $(eval $(call emit-deploy-target,PROCESSING_CORE_CLR_DLL))
 $(eval $(call emit-deploy-target,PROCESSING_CORE_CLR_DLL_MDB))
+$(eval $(call emit-deploy-target,MLDSP_CLR_DLL))
+$(eval $(call emit-deploy-target,APP_XAML))
 $(eval $(call emit-deploy-target,MLDSP_CLR_DLL_MDB))
 $(eval $(call emit-deploy-wrapper,MLDSP,mldsp,x))
 $(eval $(call emit-deploy-target,MLDSP_CLR_DLL2))
@@ -154,10 +155,10 @@ install-local: $(ASSEMBLY) $(ASSEMBLY_MDB)
 	$(call cp,$(ASSEMBLY),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call cp,$(ASSEMBLY_MDB),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call cp,$(MLDSP_CLR_XAP),$(DESTDIR)$(libdir)/$(PACKAGE))
-	$(call cp,$(MLDSP_CLR_DLL),$(DESTDIR)$(libdir)/$(PACKAGE))
-	$(call cp,$(APP_XAML),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call cp,$(PROCESSING_CORE_CLR_DLL),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call cp,$(PROCESSING_CORE_CLR_DLL_MDB),$(DESTDIR)$(libdir)/$(PACKAGE))
+	$(call cp,$(MLDSP_CLR_DLL),$(DESTDIR)$(libdir)/$(PACKAGE))
+	$(call cp,$(APP_XAML),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call cp,$(MLDSP_CLR_DLL_MDB),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call cp,$(MLDSP_GTK_EXE_MDB),$(DESTDIR)$(libdir)/$(PACKAGE))
 	mkdir -p '$(DESTDIR)$(bindir)'
@@ -171,10 +172,10 @@ uninstall-local: $(ASSEMBLY) $(ASSEMBLY_MDB)
 	$(call rm,$(ASSEMBLY),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call rm,$(ASSEMBLY_MDB),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call rm,$(MLDSP_CLR_XAP),$(DESTDIR)$(libdir)/$(PACKAGE))
-	$(call rm,$(MLDSP_CLR_DLL),$(DESTDIR)$(libdir)/$(PACKAGE))
-	$(call rm,$(APP_XAML),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call rm,$(PROCESSING_CORE_CLR_DLL),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call rm,$(PROCESSING_CORE_CLR_DLL_MDB),$(DESTDIR)$(libdir)/$(PACKAGE))
+	$(call rm,$(MLDSP_CLR_DLL),$(DESTDIR)$(libdir)/$(PACKAGE))
+	$(call rm,$(APP_XAML),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call rm,$(MLDSP_CLR_DLL_MDB),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call rm,$(MLDSP_GTK_EXE_MDB),$(DESTDIR)$(libdir)/$(PACKAGE))
 	$(call rm,$(MLDSP),$(DESTDIR)$(bindir))

@@ -18,6 +18,8 @@
     <XapFilename>mldsp.xap</XapFilename>
     <AssemblyName>mldsp</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ReleaseVersion>0.1.0</ReleaseVersion>
+    <RootNamespace>mldsp</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,9 +53,9 @@
     <Reference Include="System">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="Processing.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Processing.Core, Version=0.1.5.7843, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\build\Processing.Core.dll</HintPath>
+      <HintPath>..\..\tsukimi\Processing.Core\bin\Debug\Processing.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -81,12 +83,30 @@
     <Compile Include="mldsp_playerstatuspanel.cs" />
     <Compile Include="mldsp_keyonmeterpanel.cs" />
     <Compile Include="mldsp_spectrumanalyzer.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v2.0\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
-      <Properties InternalTargetFrameworkVersion="2.1" />
+      <Properties InternalTargetFrameworkVersion="SL2.0" />
     </MonoDevelop>
   </ProjectExtensions>
 </Project>
