@@ -16,10 +16,13 @@ There are two outcomes from this project:
 	  effort (which is part of PortMedia project):
 	  http://portmedia.sourceforge.net/
 
-It's almost just started, has some stubs and misses useful functionality.
+It still has some stubs and misses some useful functionality.
 
 
 ** Build and run mldsp/web
+
+	NOTE: as of 0.2.2, MonoDevelop won't build mldsp(-gtk) successfully.
+	Use make to build it.
 
 	Just open mldsp-web.sln, build and run it.
 
