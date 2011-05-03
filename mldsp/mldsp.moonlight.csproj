@@ -19,7 +19,7 @@
     <CreateTestPage>true</CreateTestPage>
     <TestPageFileName>index.html</TestPageFileName>
     <SilverlightAppEntry>mldsp.App</SilverlightAppEntry>
-    <XapFilename>mldspSL.xap</XapFilename>
+    <XapFilename>mldsp.moonlight.xap</XapFilename>
     <AssemblyName>mldsp.moonlight</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ReleaseVersion>0.1.0</ReleaseVersion>
