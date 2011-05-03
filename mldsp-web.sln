@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mldsp", "mldsp\mldsp.csproj", "{3E3A2388-9240-483D-866E-3E9F0EC973F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mldsp.moonlight", "mldsp\mldsp.moonlight.csproj", "{3E3A2388-9240-483D-866E-3E9F0EC973F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

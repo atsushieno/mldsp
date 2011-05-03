@@ -13,14 +13,14 @@
     <OutputType>Library</OutputType>
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
-    <GenerateSilverlightManifest>false</GenerateSilverlightManifest>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
     <XapOutputs>true</XapOutputs>
     <SilverlightApplication>true</SilverlightApplication>
     <CreateTestPage>true</CreateTestPage>
     <TestPageFileName>index.html</TestPageFileName>
     <SilverlightAppEntry>mldsp.App</SilverlightAppEntry>
-    <XapFilename>mldsp.xap</XapFilename>
-    <AssemblyName>mldsp</AssemblyName>
+    <XapFilename>mldspSL.xap</XapFilename>
+    <AssemblyName>mldsp.moonlight</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ReleaseVersion>0.1.0</ReleaseVersion>
     <RootNamespace>mldsp</RootNamespace>
@@ -48,6 +48,7 @@
     <TargetFrameworkProfile />
     <OutOfBrowserSettingsFile>Properties\OutOfBrowserSettings.xml</OutOfBrowserSettingsFile>
     <EnableOutOfBrowser>false</EnableOutOfBrowser>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -68,6 +69,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Processing.Core">
+      <HintPath>..\build\Processing.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -83,16 +87,9 @@
     <Reference Include="System">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="Processing.Core, Version=0.1.5.7843, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\build\Processing.Core.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:MarkupCompilePass1</Generator>
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
@@ -111,25 +108,11 @@
     <Compile Include="mldsp_spectrumanalyzer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows インストーラー 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
+    <Content Include="Properties\AppManifest.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\OutOfBrowserSettings.xml" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

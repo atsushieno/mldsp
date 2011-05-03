@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using ProcessingCli;
 namespace mldsp
 {
-public partial class App : ProcessingApplication
+public partial class App
 {
 public App () : base (() => Run ())
 {
@@ -97,7 +97,7 @@ ProcessingApplication.Current.@textFont (font8);
 ProcessingApplication.Current.@fill (color_ch_text_dark);
 ProcessingApplication.Current.@text (@"music visualizer and file selector", 70, text_height);
 ProcessingApplication.Current.@fill (color_ch_text_colored);
-ProcessingApplication.Current.@text (@"ver 0.02 / for moonlight 2.0 (C)2009 atsushieno", 70, text_height * 2);
+ProcessingApplication.Current.@text (@"ver 0.03 / for moonlight 2.0 (C)2009-2011 atsushieno", 70, text_height * 2);
 ProcessingApplication.Current.@stroke (color_ch_dark);
 ProcessingApplication.Current.@line (70, 18, 310, 18);
 }
@@ -107,7 +107,7 @@ ProcessingApplication.Current.@textFont (font8);
 ProcessingApplication.Current.@fill (color_ch_text_dark);
 ProcessingApplication.Current.@text (@"DRIVER ଆ", 0, text_height * 4);
 ProcessingApplication.Current.@fill (color_ch_text_colored);
-ProcessingApplication.Current.@text (@"SMF plugin", 50, text_height * 4);
+ProcessingApplication.Current.@text (@"SMF support", 50, text_height * 4);
 ProcessingApplication.Current.@text (@"0.01", 100, text_height * 4);
 ProcessingApplication.Current.@text (@"(C)2009 atsushieno", 130, text_height * 4);
 }
