@@ -9,7 +9,7 @@ There are two outcomes from this project:
 	  *not* play the songs, but just visualizes songs on the UI.
 
 	  Online demo version is available at
-	  http://veritas-vos-liberabit.com/tmp/2009/mldsp/
+	  http://dl.dropbox.com/u/493047/2011/mldsp/index.html
 
 	- mldsp/gtk: It is runnable as a Moonlight.Gtk application. It
 	  provides MIDI player functionality, which is based on portmidi
