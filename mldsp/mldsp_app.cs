@@ -20,7 +20,7 @@ using PortMidiSharp;
 
 namespace mldsp
 {
-	public partial class App : ProcessingApplication
+	public partial class App
 	{
 		static Panel white_key_panel, black_key_panel;
 		static Rectangle [,] key_rectangles = new Rectangle [16,128 - 24];
